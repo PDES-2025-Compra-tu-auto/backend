@@ -30,10 +30,10 @@ export class SaleCar {
   agency: ConcessionaryAgency;
 
   @Column('decimal')
-  precio: number;
+  price: number;
 
   @Column({ type: 'enum', enum: StatusCar })
-  estado: StatusCar;
+  status: StatusCar;
 
   @OneToMany(() => Purchase, (purchase) => purchase.saleCar)
   purchases: Purchase[];
