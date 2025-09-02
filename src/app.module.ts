@@ -11,7 +11,8 @@ import { AdminModule } from './infraestructure/modules/admin/admin.module';
 import { BuyerModule } from './infraestructure/modules/buyer/buyer.module';
 import { PurchaseModule } from './infraestructure/modules/purchase/purchase.module';
 import { ReviewModule } from './infraestructure/modules/review/review.module';
-import { ConcessionaryModule } from './infraestructure/modules/concessionary/concessionary.module';
+import { DealerModule } from './infraestructure/modules/dealer/concessionary.module';
+import { AuthModule } from './infraestructure/modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -38,10 +39,11 @@ import { ConcessionaryModule } from './infraestructure/modules/concessionary/con
     FavoriteCarModule,
     PurchaseModule,
     ReviewModule,
-    ConcessionaryModule,
+    DealerModule,
     PurchaseModule,
     AdminModule,
     BuyerModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

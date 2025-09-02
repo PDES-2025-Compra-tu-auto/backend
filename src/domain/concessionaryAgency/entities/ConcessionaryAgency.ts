@@ -1,7 +1,7 @@
 import { SaleCar } from 'src/domain/car/entities/SaleCar';
-import { Concessionary } from 'src/domain/user/entities/Concessionary';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { RegistrationStatus } from '../enums/RegistrationStatus';
+import { Dealer } from 'src/domain/user/entities/Dealer';
 
 @Entity()
 export class ConcessionaryAgency {
@@ -11,8 +11,8 @@ export class ConcessionaryAgency {
   @Column()
   concessionaryName: string;
 
-  @OneToMany(() => Concessionary, (employee) => employee.agency)
-  employees: Concessionary[];
+  @OneToMany(() => Dealer, (employee) => employee.agency)
+  employees: Dealer[];
 
   @OneToMany(() => SaleCar, (car) => car.agency)
   carsForSale: SaleCar[];

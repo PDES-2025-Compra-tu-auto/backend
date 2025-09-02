@@ -4,5 +4,6 @@ import { Buyer } from 'src/domain/user/entities/Buyer';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Buyer])],
+  exports: [TypeOrmModule],
 })
 export class BuyerModule {}

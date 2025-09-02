@@ -22,6 +22,7 @@ async function bootstrap() {
     .setTitle('CTA Compra tu auto :)')
     .setDescription('API para gestión de usuarios, autos y compras')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

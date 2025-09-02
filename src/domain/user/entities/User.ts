@@ -14,6 +14,9 @@ export abstract class User {
   email: string;
 
   @Column()
+  password: string;
+
+  @Column()
   fullname: string;
 
   @Column({ type: 'enum', enum: UserRole })
