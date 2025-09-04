@@ -5,6 +5,8 @@ import { CreateConcessionaryAgencyDto } from './dto/create-concessionary-agency.
 import { AuthGuard } from 'src/infraestructure/guards/auth.guard';
 
 @ApiTags('ConcessionaryAgency')
+@UseGuards(AuthGuard)
+@ApiBearerAuth()
 @Controller('concessionaryAgency')
 export class ConcessionaryAgencyController {
   constructor(
@@ -18,8 +20,6 @@ export class ConcessionaryAgencyController {
     return this.concessionaryAgencyService.create(createConcessionaryAgencyDto);
   }
 
-  @UseGuards(AuthGuard)
-  @ApiBearerAuth()
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return await this.concessionaryAgencyService.findOneById(id);
