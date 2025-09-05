@@ -25,22 +25,16 @@
 
 ## ¿Como ejecutar el proyecto?
 
-Pedir el .env en un principio
-
 Requisitos: Docker.
-Levanta los servicios (por ahora solo la db) con Docker Compose:
+Levanta los servicios con Docker Compose:
 ```bash
 docker-compose up -d
 ```
 
-Luego correr la app con 
-```bash
-npm run start
-```
 
 ## ¿Como probar la api?
 ## Swagger.
-
+[localhost:/4000/api](http://localhost:4000/api)
 
 
 ### Para Swagger:
