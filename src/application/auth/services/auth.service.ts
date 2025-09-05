@@ -18,6 +18,37 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
+  async validateToken(token: string) {
+    try {
+      const payload = await this.jwtService.verifyAsync(token);
+      return { valid: true, payload };
+    } catch (error) {
+      return { valid: false, error: error.message };
+    }
+  }
+
+  async refreshToken(token: string) {
+    try {
+      const payload = await this.jwtService.verifyAsync(token, {
+        ignoreExpiration: true,
+      });
+
+      const newAccessToken = this.jwtService.sign(
+        { sub: payload.sub, role: payload.role },
+        { expiresIn: '1h' },
+      );
+
+      const { exp } = this.jwtService.decode(newAccessToken);
+
+      return {
+        access_token: newAccessToken,
+        expiresAt: exp,
+      };
+    } catch {
+      throw new UnauthorizedException('Invalid token');
+    }
+  }
+
   async login({ email, password, role }: LoginDto) {
     const repo = this.userRepositoryFactory.getRepository(role);
     const user = await repo.findOne({ where: { email } });
@@ -32,8 +63,15 @@ export class AuthService {
     }
 
     const payload = { sub: user.id, role };
+
+    const accessToken = this.jwtService.sign(payload, { expiresIn: '1h' });
+    const refreshToken = this.jwtService.sign(payload, { expiresIn: '6h' });
+    const { exp } = this.jwtService.decode(accessToken);
+
     return {
-      access_token: this.jwtService.sign(payload),
+      access_token: accessToken,
+      expiresAt: exp,
+      refresh_token: refreshToken,
     };
   }
 

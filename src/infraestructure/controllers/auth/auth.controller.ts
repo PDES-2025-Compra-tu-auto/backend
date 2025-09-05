@@ -23,4 +23,15 @@ export class AuthController {
   register(@Body() registerDto: RegisterDto) {
     return this.authService.register(registerDto);
   }
+
+  @ApiOperation({ description: 'Validate JWT token', summary: 'Validate JWT' })
+  @Post('validate')
+  validate(@Body('token') token: string) {
+    return this.authService.validateToken(token);
+  }
+
+  @Post('refresh')
+  async refresh(@Body('token') token: string) {
+    return this.authService.refreshToken(token);
+  }
 }
