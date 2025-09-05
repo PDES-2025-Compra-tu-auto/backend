@@ -28,7 +28,7 @@
 Requisitos: Docker.
 Levanta los servicios con Docker Compose:
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 
