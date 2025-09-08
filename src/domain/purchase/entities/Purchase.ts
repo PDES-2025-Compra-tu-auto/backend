@@ -1,7 +1,8 @@
 import { SaleCar } from 'src/domain/car/entities/SaleCar';
 import { ConcessionaryAgency } from 'src/domain/concessionaryAgency/entities/ConcessionaryAgency';
 import { Buyer } from 'src/domain/user/entities/Buyer';
-import { Concessionary } from 'src/domain/user/entities/Concessionary';
+import { Dealer } from 'src/domain/user/entities/Dealer';
+
 import {
   Column,
   CreateDateColumn,
@@ -34,6 +35,6 @@ export class Purchase {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToOne(() => Concessionary, (concessionary) => concessionary.sales)
-  soldBy: Concessionary;
+  @ManyToOne(() => Dealer, (dealer) => dealer.sales)
+  soldBy: Dealer;
 }

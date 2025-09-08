@@ -30,4 +30,18 @@ export class ConcessionaryAgencyService {
     };
     return await this.concessionaryAgencyRepository.save(payload);
   }
+
+  async findOneById(id: string) {
+    const agency = await this.concessionaryAgencyRepository.findOne({
+      where: { id },
+    });
+
+    if (!agency) {
+      throw new BadRequestException(
+        `ConcessionaryAgency with id ${id} not found`,
+      );
+    }
+
+    return agency;
+  }
 }

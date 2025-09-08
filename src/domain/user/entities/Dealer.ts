@@ -4,7 +4,7 @@ import { Purchase } from 'src/domain/purchase/entities/Purchase';
 import { ConcessionaryAgency } from 'src/domain/concessionaryAgency/entities/ConcessionaryAgency';
 
 @Entity()
-export class Concessionary extends User {
+export class Dealer extends User {
   @OneToMany(() => Purchase, (purchase) => purchase.soldBy)
   sales: Purchase[];
 
