@@ -18,14 +18,6 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async validateToken(token: string) {
-    try {
-      const payload = await this.jwtService.verifyAsync(token);
-      return { valid: true, payload };
-    } catch (error) {
-      return { valid: false, error: error.message };
-    }
-  }
 
   async refreshToken(token: string) {
     try {
