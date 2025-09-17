@@ -1,4 +1,4 @@
-import { SaleCar } from 'src/domain/car/entities/SaleCar';
+import { ModelCar } from 'src/domain/car/entities/ModelCar';
 import { Buyer } from 'src/domain/user/entities/Buyer';
 import {
   Column,
@@ -19,8 +19,8 @@ export class Review {
   @ManyToOne(() => Buyer)
   buyer: Buyer;
 
-  @ManyToOne(() => SaleCar, (car) => car.reviews)
-  car: SaleCar;
+  @ManyToOne(() => ModelCar, (model) => model.reviews)
+  modelCar: ModelCar;
 
   @Column({ type: 'int' })
   score: number;

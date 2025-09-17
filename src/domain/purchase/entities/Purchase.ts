@@ -35,6 +35,9 @@ export class Purchase {
   @UpdateDateColumn()
   updatedAt: Date;
 
+  @Column()
+  patent: string;
+
   @ManyToOne(() => Dealer, (dealer) => dealer.sales)
   soldBy: Dealer;
 }
