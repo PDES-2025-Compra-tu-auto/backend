@@ -7,7 +7,6 @@ import {
 } from 'typeorm';
 import { StatusCar } from '../enums/StatusCar';
 import { ModelCar } from './ModelCar';
-import { Review } from 'src/domain/review/entities/Review';
 import { ConcessionaryAgency } from 'src/domain/concessionaryAgency/entities/ConcessionaryAgency';
 import { FavoriteCar } from 'src/domain/favoriteCar/entities/FavoriteCar';
 import { Purchase } from 'src/domain/purchase/entities/Purchase';
@@ -19,12 +18,6 @@ export class SaleCar {
 
   @ManyToOne(() => ModelCar)
   modelCar: ModelCar;
-
-  @OneToMany(() => Review, (review) => review.car)
-  reviews: Review[];
-
-  @Column()
-  patent: string;
 
   @ManyToOne(() => ConcessionaryAgency, (agency) => agency.carsForSale)
   agency: ConcessionaryAgency;
