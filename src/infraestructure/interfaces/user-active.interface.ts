@@ -1,0 +1,6 @@
+import { UserRole } from 'src/domain/user/enums/UserRole';
+
+export interface UserActiveI {
+  sub: string;
+  role: UserRole;
+}

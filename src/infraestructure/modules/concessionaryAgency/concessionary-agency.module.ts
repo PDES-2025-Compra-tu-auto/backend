@@ -8,5 +8,6 @@ import { ConcessionaryAgencyController } from 'src/infraestructure/controllers/c
   imports: [TypeOrmModule.forFeature([ConcessionaryAgency])],
   providers: [ConcessionaryAgencyService],
   controllers: [ConcessionaryAgencyController],
+  exports: [ConcessionaryAgencyService],
 })
 export class ConcessionaryAgencyModule {}

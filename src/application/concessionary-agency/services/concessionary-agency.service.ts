@@ -44,4 +44,8 @@ export class ConcessionaryAgencyService {
 
     return agency;
   }
+
+  findAll(): Promise<ConcessionaryAgency[]> {
+    return this.concessionaryAgencyRepository.find();
+  }
 }
