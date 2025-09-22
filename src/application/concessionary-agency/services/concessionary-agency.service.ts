@@ -45,7 +45,21 @@ export class ConcessionaryAgencyService {
     return agency;
   }
 
-  findAll(): Promise<ConcessionaryAgency[]> {
-    return this.concessionaryAgencyRepository.find();
+  async findAll(status?: RegistrationStatus): Promise<ConcessionaryAgency[]> {
+    if (status) {
+      return await this.concessionaryAgencyRepository.find({
+        where: { registrationStatus: status },
+      });
+    }
+    return await this.concessionaryAgencyRepository.find();
+  }
+
+  async updateStatus(id: string, status: RegistrationStatus) {
+    await this.findOneById(id);
+    await this.concessionaryAgencyRepository.update(id, {
+      registrationStatus: status,
+    });
+
+    return this.findOneById(id);
   }
 }

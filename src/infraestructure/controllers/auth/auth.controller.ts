@@ -30,7 +30,7 @@ export class AuthController {
   @ApiBearerAuth()
   @Post('validate')
   async validate() {
-    return {valid:true}
+    return { valid: true };
   }
 
   @ApiBody({ schema: { properties: { token: { type: 'string' } } } })

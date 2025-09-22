@@ -15,9 +15,6 @@ export class ModelCar {
   @Column()
   description: string;
 
-  @Column()
-  year: string;
-
   @OneToMany(() => Review, (review) => review.modelCar)
   reviews: Review[];
 }

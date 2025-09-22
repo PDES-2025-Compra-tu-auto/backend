@@ -6,6 +6,7 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { SaleCarService } from 'src/application/sale-car/services/sale-car.service';
 import { SaleCar } from 'src/domain/car/entities/SaleCar';
@@ -14,11 +15,21 @@ import type { UserActiveI } from 'src/infraestructure/interfaces/user-active.int
 import { CreateSaleCarDto } from './dto/create-sale-car.dto';
 import { UpdateSaleCarDto } from './dto/update-sale.car.dto';
 import { StatusCar } from 'src/domain/car/enums/StatusCar';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from 'src/infraestructure/guards/auth.guard';
+import { RolesGuard } from 'src/infraestructure/guards/roles.guard';
+import { Roles } from 'src/infraestructure/decorators/roles.decorator';
+import { UserRole } from 'src/domain/user/enums/UserRole';
 
+@ApiTags('SaleCar')
+@ApiBearerAuth()
+@UseGuards(AuthGuard)
 @Controller('saleCar')
 export class SaleCarController {
   constructor(private readonly saleCarService: SaleCarService) {}
 
+  @UseGuards(RolesGuard)
+  @Roles(UserRole.DEALER, UserRole.ADMINISTRATOR)
   @Post()
   create(
     @Body() dto: CreateSaleCarDto,
@@ -37,6 +48,8 @@ export class SaleCarController {
     return this.saleCarService.findSaleCar(id);
   }
 
+  @UseGuards(RolesGuard)
+  @Roles(UserRole.DEALER, UserRole.ADMINISTRATOR)
   @Patch(':id')
   update(
     @Param('id') id: string,
