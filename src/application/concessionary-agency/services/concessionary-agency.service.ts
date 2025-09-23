@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ConcessionaryAgency } from 'src/domain/concessionaryAgency/entities/ConcessionaryAgency';
 import { RegistrationStatus } from 'src/domain/concessionaryAgency/enums/RegistrationStatus';
-import { CreateConcessionaryAgencyDto } from 'src/infraestructure/controllers/concessionary-agency/dto/create-concessionary-agency.dto';
+import { CreateConcessionaryAgencyDto } from 'src/infraestructure/concessionary-agency/dto/create-concessionary-agency.dto';
 import { Not, Repository } from 'typeorm';
 
 @Injectable()

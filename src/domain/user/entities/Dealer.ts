@@ -1,9 +1,9 @@
-import { Entity, OneToMany, ManyToOne } from 'typeorm';
+import { OneToMany, ManyToOne, ChildEntity } from 'typeorm';
 import { User } from './User';
 import { Purchase } from 'src/domain/purchase/entities/Purchase';
 import { ConcessionaryAgency } from 'src/domain/concessionaryAgency/entities/ConcessionaryAgency';
 
-@Entity()
+@ChildEntity('DEALER')
 export class Dealer extends User {
   @OneToMany(() => Purchase, (purchase) => purchase.soldBy)
   sales: Purchase[];

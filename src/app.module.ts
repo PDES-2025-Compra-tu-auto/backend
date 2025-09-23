@@ -1,18 +1,13 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { SaleCarModule } from './infraestructure/modules/saleCar/sale-car.module';
 import { ModelCarModule } from './infraestructure/modules/modelCar/model-car.module';
-import { ConcessionaryAgencyModule } from './infraestructure/modules/concessionaryAgency/concessionary-agency.module';
+import { ConcessionaryAgencyModule } from './infraestructure/concessionary-agency/concessionary-agency.module';
 import { FavoriteCarModule } from './infraestructure/modules/favoriteCar/favorite-car.module';
-import { AdminModule } from './infraestructure/modules/admin/admin.module';
-import { BuyerModule } from './infraestructure/modules/buyer/buyer.module';
 import { PurchaseModule } from './infraestructure/modules/purchase/purchase.module';
 import { ReviewModule } from './infraestructure/modules/review/review.module';
-import { DealerModule } from './infraestructure/modules/dealer/concessionary.module';
-import { AuthModule } from './infraestructure/modules/auth/auth.module';
+import { AuthModule } from './infraestructure/auth/auth.module';
+import { SaleCarModule } from './infraestructure/sale-car/sale-car.module';
 
 @Module({
   imports: [
@@ -39,13 +34,10 @@ import { AuthModule } from './infraestructure/modules/auth/auth.module';
     FavoriteCarModule,
     PurchaseModule,
     ReviewModule,
-    DealerModule,
     PurchaseModule,
-    AdminModule,
-    BuyerModule,
     AuthModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}

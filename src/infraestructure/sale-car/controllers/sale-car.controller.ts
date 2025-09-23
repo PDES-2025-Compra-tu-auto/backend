@@ -12,8 +12,8 @@ import { SaleCarService } from 'src/application/sale-car/services/sale-car.servi
 import { SaleCar } from 'src/domain/car/entities/SaleCar';
 import { ActiveUser } from 'src/infraestructure/decorators/active-user.decorator';
 import type { UserActiveI } from 'src/infraestructure/interfaces/user-active.interface';
-import { CreateSaleCarDto } from './dto/create-sale-car.dto';
-import { UpdateSaleCarDto } from './dto/update-sale.car.dto';
+import { CreateSaleCarDto } from '../dto/create-sale-car.dto';
+import { UpdateSaleCarDto } from '../dto/update-sale.car.dto';
 import { StatusCar } from 'src/domain/car/enums/StatusCar';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/infraestructure/guards/auth.guard';

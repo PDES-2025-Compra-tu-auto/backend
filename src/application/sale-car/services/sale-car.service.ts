@@ -8,12 +8,12 @@ import { ConcessionaryAgencyService } from 'src/application/concessionary-agency
 import { ModelCarService } from 'src/application/model-car/services/model-car.service';
 import { SaleCar } from 'src/domain/car/entities/SaleCar';
 import { StatusCar } from 'src/domain/car/enums/StatusCar';
-import { UserRole } from 'src/domain/user/enums/UserRole';
-import { CreateSaleCarDto } from 'src/infraestructure/controllers/sale-car/dto/create-sale-car.dto';
-import { UpdateSaleCarDto } from 'src/infraestructure/controllers/sale-car/dto/update-sale.car.dto';
-import { UserRepositoryFactory } from 'src/infraestructure/factories/user-repository.factory';
+import { CreateSaleCarDto } from 'src/infraestructure/sale-car/dto/create-sale-car.dto';
+import { UpdateSaleCarDto } from 'src/infraestructure/sale-car/dto/update-sale.car.dto';
 import { UserActiveI } from 'src/infraestructure/interfaces/user-active.interface';
 import { Repository } from 'typeorm';
+import { User } from 'src/domain/user/entities/User';
+import { Dealer } from 'src/domain/user/entities/Dealer';
 
 @Injectable()
 export class SaleCarService {
@@ -22,16 +22,15 @@ export class SaleCarService {
     private readonly saleCarRepo: Repository<SaleCar>,
     private readonly modelCarService: ModelCarService,
     private readonly agencyService: ConcessionaryAgencyService,
-    private readonly userRepositoryFactory: UserRepositoryFactory,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
   ) {}
 
   async create(
     dto: CreateSaleCarDto,
     userSesionActive: UserActiveI,
   ): Promise<SaleCar> {
-    const repo = this.userRepositoryFactory.getRepository(
-      userSesionActive.role,
-    );
+    const repo:Repository<Dealer> = this.userRepository as Repository<Dealer>
     const dealer = await repo.findOne({
       where: { id: userSesionActive.sub },
       relations: ['agency'],
@@ -81,9 +80,7 @@ export class SaleCarService {
     dto: UpdateSaleCarDto,
     userSesionActive: UserActiveI,
   ): Promise<SaleCar> {
-    const dealerRepo = this.userRepositoryFactory.getRepository(
-      UserRole.DEALER,
-    );
+    const dealerRepo :Repository<Dealer> = this.userRepository as Repository<Dealer>
     const dealer = await dealerRepo.findOne({
       where: { id: userSesionActive.sub },
       relations: ['agency'],

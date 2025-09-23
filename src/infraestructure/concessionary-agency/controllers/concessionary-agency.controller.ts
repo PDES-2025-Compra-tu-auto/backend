@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { ConcessionaryAgencyService } from 'src/application/concessionary-agency/services/concessionary-agency.service';
-import { CreateConcessionaryAgencyDto } from './dto/create-concessionary-agency.dto';
+import { CreateConcessionaryAgencyDto } from '../../concessionary-agency/dto/create-concessionary-agency.dto';
 import { AuthGuard } from 'src/infraestructure/guards/auth.guard';
 import { RolesGuard } from 'src/infraestructure/guards/roles.guard';
 import { Roles } from 'src/infraestructure/decorators/roles.decorator';
@@ -35,7 +35,7 @@ export class ConcessionaryAgencyController {
 
   @Get()
   @ApiQuery({
-    name: 'registrationStatus',
+    name: 'status',
     enum: RegistrationStatus,
     required: false,
     description: 'Filtrar por estado de registro',

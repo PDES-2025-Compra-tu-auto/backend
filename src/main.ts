@@ -15,6 +15,8 @@ async function bootstrap() {
     }),
   );
   app.enableCors();
+  app.setGlobalPrefix('api');
+
   const configService = app.get(ConfigService);
   const port = configService.get<number>('PORT') ?? 3000;
 
@@ -26,7 +28,7 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('api/docs', app, document);
 
   await app.listen(port);
 }

@@ -11,8 +11,4 @@ export class LoginDto {
   @MinLength(4)
   password: string;
 
-  @IsEnum(UserRole, {
-    message: 'role must be one of BUYER, DEALER, ADMINISTRATOR',
-  })
-  role: UserRole;
 }

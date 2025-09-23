@@ -4,20 +4,21 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { RegisterDto } from 'src/infraestructure/controllers/auth/dtos/register.dto';
-import { UserRepositoryFactory } from 'src/infraestructure/factories/user-repository.factory';
 import * as bcrypt from 'bcrypt';
 import { plainToInstance } from 'class-transformer';
-import { UserResponseDto } from 'src/infraestructure/controllers/auth/dtos/register-response.dto';
-import { LoginDto } from 'src/infraestructure/controllers/auth/dtos/login.dto';
-
+import { RegisterDto } from 'src/infraestructure/auth/dtos/register.dto';
+import { UserResponseDto } from 'src/infraestructure/auth/dtos/register-response.dto';
+import { Repository } from 'typeorm';
+import { User } from 'src/domain/user/entities/User';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Dealer } from 'src/domain/user/entities/Dealer';
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly userRepositoryFactory: UserRepositoryFactory,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
     private readonly jwtService: JwtService,
   ) {}
-
 
   async refreshToken(token: string) {
     try {
@@ -33,7 +34,7 @@ export class AuthService {
       const { exp } = this.jwtService.decode(newAccessToken);
 
       return {
-        access_token: newAccessToken,
+        accessToken: newAccessToken,
         expiresAt: exp,
       };
     } catch {
@@ -41,9 +42,8 @@ export class AuthService {
     }
   }
 
-  async login({ email, password, role }: LoginDto) {
-    const repo = this.userRepositoryFactory.getRepository(role);
-    const user = await repo.findOne({ where: { email } });
+  async login(email:string,password:string) {
+    const user = await this.userRepository.findOne({ where: { email } });
 
     if (!user) {
       throw new UnauthorizedException('User not found');
@@ -54,36 +54,38 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const payload = { sub: user.id, role };
+    const payload = { sub: user.id, role: user.role, fullname: user.fullname, email: user.email };
 
     const accessToken = this.jwtService.sign(payload, { expiresIn: '1h' });
     const refreshToken = this.jwtService.sign(payload, { expiresIn: '6h' });
     const { exp } = this.jwtService.decode(accessToken);
 
     return {
-      access_token: accessToken,
+      accessToken: accessToken,
       expiresAt: exp,
-      refresh_token: refreshToken,
+      refreshToken: refreshToken,
+      fullName: user.fullname,
+      role: user.role,
+      agencyId: (user as Dealer).agency?.id|| undefined
     };
   }
 
   async register(dto: RegisterDto) {
-    const repo = this.userRepositoryFactory.getRepository(dto.role);
-    const existingUser = await repo.findOne({ where: { email: dto.email } });
+    const existingUser = await this.userRepository.findOne({ where: { email: dto.email } });
     if (existingUser) {
       throw new BadRequestException('User already exists');
     }
 
     const hashedPassword = await bcrypt.hash(dto.password, 12);
 
-    const user = repo.create({
+    const user = this.userRepository.create({
       ...dto,
       password: hashedPassword,
     });
 
-    await repo.save(user);
+    await this.userRepository.save(user);
 
-    const userCreated = await repo.findOne({ where: { email: dto.email } });
+    const userCreated = await this.userRepository.findOne({ where: { email: dto.email } });
     const userResponse = plainToInstance(UserResponseDto, userCreated, {
       excludeExtraneousValues: true,
     });
