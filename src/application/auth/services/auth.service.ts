@@ -61,10 +61,11 @@ export class AuthService {
     const { exp } = this.jwtService.decode(accessToken);
 
     return {
+      id: user.id,
       accessToken: accessToken,
       expiresAt: exp,
       refreshToken: refreshToken,
-      fullName: user.fullname,
+      fullname: user.fullname,
       role: user.role,
     };
   }

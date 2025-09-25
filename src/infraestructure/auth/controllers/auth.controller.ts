@@ -34,7 +34,8 @@ export class AuthController {
   @UseGuards(AuthGuard)
   @Post('validate')
   async validate(@ActiveUser() userSession:UserActiveI) {
-    return {valid: true, ...userSession}
+    const {sub,...rest} = userSession
+    return {valid: true,id:sub,...rest }
 
   }
 
