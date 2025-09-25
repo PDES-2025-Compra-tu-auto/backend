@@ -11,7 +11,7 @@ import { UserResponseDto } from 'src/infraestructure/auth/dtos/register-response
 import { Repository } from 'typeorm';
 import { User } from 'src/domain/user/entities/User';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Dealer } from 'src/domain/user/entities/Dealer';
+import { LoginDto } from 'src/infraestructure/auth/dtos/login.dto';
 @Injectable()
 export class AuthService {
   constructor(
@@ -42,7 +42,7 @@ export class AuthService {
     }
   }
 
-  async login(email:string,password:string) {
+  async login({email,password}:LoginDto) {
     const user = await this.userRepository.findOne({ where: { email } });
 
     if (!user) {
@@ -66,7 +66,6 @@ export class AuthService {
       refreshToken: refreshToken,
       fullName: user.fullname,
       role: user.role,
-      agencyId: (user as Dealer).agency?.id|| undefined
     };
   }
 

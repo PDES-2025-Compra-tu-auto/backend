@@ -7,9 +7,9 @@ import {
 } from 'typeorm';
 import { StatusCar } from '../enums/StatusCar';
 import { ModelCar } from './ModelCar';
-import { ConcessionaryAgency } from 'src/domain/concessionaryAgency/entities/ConcessionaryAgency';
 import { FavoriteCar } from 'src/domain/favoriteCar/entities/FavoriteCar';
 import { Purchase } from 'src/domain/purchase/entities/Purchase';
+import { Concesionary } from 'src/domain/user/entities/Concesionary';
 
 @Entity()
 export class SaleCar {
@@ -19,8 +19,8 @@ export class SaleCar {
   @ManyToOne(() => ModelCar)
   modelCar: ModelCar;
 
-  @ManyToOne(() => ConcessionaryAgency, (agency) => agency.carsForSale)
-  agency: ConcessionaryAgency;
+  @ManyToOne(() => Concesionary, (concesionary) => concesionary.carsForSale)
+  concesionary: Concesionary;
 
   @Column('decimal')
   price: number;

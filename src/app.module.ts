@@ -1,11 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ModelCarModule } from './infraestructure/modules/modelCar/model-car.module';
-import { ConcessionaryAgencyModule } from './infraestructure/concessionary-agency/concessionary-agency.module';
-import { FavoriteCarModule } from './infraestructure/modules/favoriteCar/favorite-car.module';
-import { PurchaseModule } from './infraestructure/modules/purchase/purchase.module';
-import { ReviewModule } from './infraestructure/modules/review/review.module';
+import { ModelCarModule } from './infraestructure/model-car/model-car.module';
+import { FavoriteCarModule } from './infraestructure/favourite-car/favorite-car.module';
+import { PurchaseModule } from './infraestructure/purchase/purchase.module';
+import { ReviewModule } from './infraestructure/review/review.module';
 import { AuthModule } from './infraestructure/auth/auth.module';
 import { SaleCarModule } from './infraestructure/sale-car/sale-car.module';
 
@@ -30,7 +29,6 @@ import { SaleCarModule } from './infraestructure/sale-car/sale-car.module';
     }),
     SaleCarModule,
     ModelCarModule,
-    ConcessionaryAgencyModule,
     FavoriteCarModule,
     PurchaseModule,
     ReviewModule,

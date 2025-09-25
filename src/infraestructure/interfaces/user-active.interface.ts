@@ -5,5 +5,4 @@ export interface UserActiveI {
   role: UserRole;
   fullname: string;
   email: string;
-  agencyId?: string;
 }

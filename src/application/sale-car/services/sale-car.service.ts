@@ -1,10 +1,8 @@
 import {
-  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ConcessionaryAgencyService } from 'src/application/concessionary-agency/services/concessionary-agency.service';
 import { ModelCarService } from 'src/application/model-car/services/model-car.service';
 import { SaleCar } from 'src/domain/car/entities/SaleCar';
 import { StatusCar } from 'src/domain/car/enums/StatusCar';
@@ -13,7 +11,7 @@ import { UpdateSaleCarDto } from 'src/infraestructure/sale-car/dto/update-sale.c
 import { UserActiveI } from 'src/infraestructure/interfaces/user-active.interface';
 import { Repository } from 'typeorm';
 import { User } from 'src/domain/user/entities/User';
-import { Dealer } from 'src/domain/user/entities/Dealer';
+import { Concesionary } from 'src/domain/user/entities/Concesionary';
 
 @Injectable()
 export class SaleCarService {
@@ -21,7 +19,6 @@ export class SaleCarService {
     @InjectRepository(SaleCar)
     private readonly saleCarRepo: Repository<SaleCar>,
     private readonly modelCarService: ModelCarService,
-    private readonly agencyService: ConcessionaryAgencyService,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
   ) {}
@@ -30,20 +27,19 @@ export class SaleCarService {
     dto: CreateSaleCarDto,
     userSesionActive: UserActiveI,
   ): Promise<SaleCar> {
-    const repo:Repository<Dealer> = this.userRepository as Repository<Dealer>
-    const dealer = await repo.findOne({
+    const repo: Repository<Concesionary> = this
+      .userRepository as Repository<Concesionary>;
+    const concesionary = await repo.findOne({
       where: { id: userSesionActive.sub },
-      relations: ['agency'],
     });
 
-    if (!dealer) {
+    if (!concesionary) {
       throw new NotFoundException('Dealer not found');
     }
     const modelCar = await this.modelCarService.findById(dto.modelCarId);
 
     const saleCar = this.saleCarRepo.create({
       modelCar,
-      agency: dealer.agency,
       price: dto.price,
       status: StatusCar.AVAILABLE,
     });
@@ -55,13 +51,13 @@ export class SaleCarService {
     const whereClause = status ? { status } : {};
     return this.saleCarRepo.find({
       where: whereClause,
-      relations: ['agency', 'modelCar'],
+      relations: ['modelCar'],
     });
   }
 
   async findSaleCar(
     id: string,
-    relations: string[] = ['agency', 'modelCar'],
+    relations: string[] = ['modelCar'],
   ): Promise<SaleCar> {
     const saleCar = await this.saleCarRepo.findOne({
       where: { id },
@@ -75,29 +71,7 @@ export class SaleCarService {
     return saleCar;
   }
 
-  async update(
-    id: string,
-    dto: UpdateSaleCarDto,
-    userSesionActive: UserActiveI,
-  ): Promise<SaleCar> {
-    const dealerRepo :Repository<Dealer> = this.userRepository as Repository<Dealer>
-    const dealer = await dealerRepo.findOne({
-      where: { id: userSesionActive.sub },
-      relations: ['agency'],
-    });
-
-    if (!dealer || !dealer.agency) {
-      throw new ForbiddenException('Dealer does not belong to any agency');
-    }
-
-    const saleCar = await this.findSaleCar(id, ['agency']);
-
-    if (saleCar.agency.id !== dealer.agency.id) {
-      throw new ForbiddenException(
-        'You cannot update SaleCars from another agency',
-      );
-    }
-
+  async update(id: string, dto: UpdateSaleCarDto): Promise<SaleCar> {
     const { price, status } = dto;
 
     const updatedFields: Partial<SaleCar> = {};

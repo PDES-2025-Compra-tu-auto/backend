@@ -4,10 +4,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthService } from 'src/application/auth/services/auth.service';
 import { AuthController } from './controllers/auth.controller';
 import { UserModule } from '../user/user.module';
-import { LoginUseCase } from 'src/application/auth/use-cases/login.use-case';
-import { RegisterUseCase } from 'src/application/auth/use-cases/register.use-case';
-import { ValidateUseCase } from 'src/application/auth/use-cases/validate.use-case';
-import { RefreshTokenUseCase } from 'src/application/auth/use-cases/refreshToken.useCase';
 
 @Module({
   imports: [
@@ -24,6 +20,6 @@ import { RefreshTokenUseCase } from 'src/application/auth/use-cases/refreshToken
     UserModule,
   ],
   controllers: [AuthController],
-  providers: [LoginUseCase, RegisterUseCase,ValidateUseCase,RefreshTokenUseCase, AuthService],
+  providers: [AuthService],
 })
 export class AuthModule {}

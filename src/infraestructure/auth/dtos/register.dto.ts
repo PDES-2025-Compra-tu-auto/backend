@@ -22,15 +22,24 @@ export class RegisterDto {
   fullname: string;
 
   @IsEnum(UserRole, {
-    message: 'role must be one of BUYER, DEALER, ADMINISTRATOR',
+    message: 'role must be one of BUYER, CONCESIONARY, ADMINISTRATOR',
   })
   role: UserRole;
 
-  @ValidateIf((o) => o.role === UserRole.DEALER)
-  @IsString({ message: 'agencyId must be a string' })
-  @IsNotEmpty({ message: 'agencyId is required when role is DEALER' })
+  @ValidateIf((o) => o.role === UserRole.CONCESIONARY)
+  @IsString({ message: 'concessionaryName must be a string' })
+  @IsNotEmpty({ message: 'concessionaryName is required when role is CONCECIONARY' })
   @Transform(({ obj, value }) =>
-    obj.role === UserRole.DEALER ? value : undefined,
+    obj.role === UserRole.CONCESIONARY ? value : undefined,
   )
-  agencyId?: string;
+  concessionaryName?:string
+
+  
+  @ValidateIf((o) => o.role === UserRole.CONCESIONARY)
+  @IsString({ message: 'concesionaryCuit must be a string' })
+  @IsNotEmpty({ message: 'concesionaryCuit is required when role is CONCECIONARY' })
+  @Transform(({ obj, value }) =>
+    obj.role === UserRole.CONCESIONARY ? value : undefined,
+  )
+  concesionaryCuit?: string
 }

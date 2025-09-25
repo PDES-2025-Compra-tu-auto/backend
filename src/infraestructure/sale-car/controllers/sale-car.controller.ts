@@ -29,7 +29,7 @@ export class SaleCarController {
   constructor(private readonly saleCarService: SaleCarService) {}
 
   @UseGuards(RolesGuard)
-  @Roles(UserRole.DEALER, UserRole.ADMINISTRATOR)
+  @Roles(UserRole.CONCESIONARY, UserRole.ADMINISTRATOR)
   @Post()
   create(
     @Body() dto: CreateSaleCarDto,
@@ -49,13 +49,12 @@ export class SaleCarController {
   }
 
   @UseGuards(RolesGuard)
-  @Roles(UserRole.DEALER, UserRole.ADMINISTRATOR)
+  @Roles(UserRole.CONCESIONARY, UserRole.ADMINISTRATOR)
   @Patch(':id')
   update(
     @Param('id') id: string,
     @Body() dto: UpdateSaleCarDto,
-    @ActiveUser() userSesionActive: UserActiveI,
   ): Promise<SaleCar> {
-    return this.saleCarService.update(id, dto, userSesionActive);
+    return this.saleCarService.update(id, dto);
   }
 }

@@ -1,6 +1,5 @@
 import { Transform } from 'class-transformer';
-import { IsEmail, IsEnum, IsString, MinLength } from 'class-validator';
-import { UserRole } from 'src/domain/user/enums/UserRole';
+import { IsEmail, IsString, MinLength } from 'class-validator';
 
 export class LoginDto {
   @IsEmail()
