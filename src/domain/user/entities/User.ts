@@ -7,6 +7,7 @@ import {
   Entity,
 } from 'typeorm';
 import { UserRole } from '../enums/UserRole';
+import { UserStatus } from '../enums/UserStatus';
 
 
 @Entity()
@@ -23,6 +24,9 @@ export abstract class User {
 
   @Column()
   fullname: string;
+
+  @Column({type: 'enum', enum: UserStatus, default: UserStatus.ACTIVE})
+  status: UserStatus;
 
   @Column({ type: 'enum', enum: UserRole })
   role: UserRole;

@@ -1,17 +1,19 @@
 import {
   BadRequestException,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { plainToInstance } from 'class-transformer';
 import { RegisterDto } from 'src/infraestructure/auth/dtos/register.dto';
-import { UserResponseDto } from 'src/infraestructure/auth/dtos/register-response.dto';
+import { RegisterResponseDto } from 'src/infraestructure/auth/dtos/register-response.dto';
 import { Repository } from 'typeorm';
 import { User } from 'src/domain/user/entities/User';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LoginDto } from 'src/infraestructure/auth/dtos/login.dto';
+import { UserStatus } from 'src/domain/user/enums/UserStatus';
 @Injectable()
 export class AuthService {
   constructor(
@@ -46,7 +48,11 @@ export class AuthService {
     const user = await this.userRepository.findOne({ where: { email } });
 
     if (!user) {
-      throw new UnauthorizedException('User not found');
+      throw new NotFoundException('User not found');
+    }
+
+    if(user.status=== UserStatus.INACTIVE){
+      throw new UnauthorizedException('User is inactive');
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
@@ -64,6 +70,7 @@ export class AuthService {
       id: user.id,
       accessToken: accessToken,
       expiresAt: exp,
+      email: user.email,
       refreshToken: refreshToken,
       fullname: user.fullname,
       role: user.role,
@@ -86,7 +93,7 @@ export class AuthService {
     await this.userRepository.save(user);
 
     const userCreated = await this.userRepository.findOne({ where: { email: dto.email } });
-    const userResponse = plainToInstance(UserResponseDto, userCreated, {
+    const userResponse = plainToInstance(RegisterResponseDto, userCreated, {
       excludeExtraneousValues: true,
     });
     return userResponse;
