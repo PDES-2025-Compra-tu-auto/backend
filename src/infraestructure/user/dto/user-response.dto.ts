@@ -1,9 +1,14 @@
 import { Expose } from 'class-transformer';
 import { UserRole } from 'src/domain/user/enums/UserRole';
 
-export class RegisterResponseDto {
+
+export class UserResponseDto {
   @Expose()
   id: number;
+
+  @Expose()
+  fullname: string;
+
 
   @Expose()
   email: string;
