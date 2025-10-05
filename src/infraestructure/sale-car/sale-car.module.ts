@@ -8,11 +8,7 @@ import { ModelCarModule } from '../model-car/model-car.module';
 import { UserModule } from '../user/user.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([SaleCar]),
-    ModelCarModule,
-    UserModule,
-  ],
+  imports: [TypeOrmModule.forFeature([SaleCar]), ModelCarModule, UserModule],
   controllers: [SaleCarController],
   providers: [SaleCarService],
   exports: [SaleCarService],

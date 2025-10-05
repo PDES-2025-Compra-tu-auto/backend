@@ -1,7 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ModelCarService } from 'src/application/model-car/services/model-car.service';
 import { SaleCar } from 'src/domain/car/entities/SaleCar';
@@ -10,8 +7,9 @@ import { CreateSaleCarDto } from 'src/infraestructure/sale-car/dto/create-sale-c
 import { UpdateSaleCarDto } from 'src/infraestructure/sale-car/dto/update-sale.car.dto';
 import { UserActiveI } from 'src/infraestructure/interfaces/user-active.interface';
 import { Repository } from 'typeorm';
-import { User } from 'src/domain/user/entities/User';
-import { Concesionary } from 'src/domain/user/entities/Concesionary';
+import { UserService } from 'src/application/user/services/user.service';
+import { plainToInstance } from 'class-transformer';
+import { SaleCarResponseDto } from 'src/infraestructure/sale-car/dto/sale-car-response.dto';
 
 @Injectable()
 export class SaleCarService {
@@ -19,32 +17,28 @@ export class SaleCarService {
     @InjectRepository(SaleCar)
     private readonly saleCarRepo: Repository<SaleCar>,
     private readonly modelCarService: ModelCarService,
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
+    private readonly userService: UserService,
   ) {}
 
   async create(
     dto: CreateSaleCarDto,
     userSesionActive: UserActiveI,
-  ): Promise<SaleCar> {
-    const repo: Repository<Concesionary> = this
-      .userRepository as Repository<Concesionary>;
-    const concesionary = await repo.findOne({
-      where: { id: userSesionActive.sub },
-    });
-
-    if (!concesionary) {
-      throw new NotFoundException('Dealer not found');
-    }
+  ): Promise<SaleCarResponseDto> {
+    const user = await this.userService.findEntityById(userSesionActive.sub);
     const modelCar = await this.modelCarService.findById(dto.modelCarId);
 
     const saleCar = this.saleCarRepo.create({
       modelCar,
       price: dto.price,
       status: StatusCar.AVAILABLE,
+      concesionary: user,
     });
 
-    return this.saleCarRepo.save(saleCar);
+    const savedSaleCar = await this.saleCarRepo.save(saleCar);
+
+    return plainToInstance(SaleCarResponseDto, savedSaleCar, {
+      excludeExtraneousValues: true,
+    });
   }
 
   async findAll(status?: StatusCar): Promise<SaleCar[]> {

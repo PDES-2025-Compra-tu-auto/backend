@@ -1,10 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Patch,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, Patch, UseGuards } from '@nestjs/common';
 import { ActiveUser } from 'src/infraestructure/decorators/active-user.decorator';
 import type { UserActiveI } from 'src/infraestructure/interfaces/user-active.interface';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -22,17 +16,19 @@ export class UserController {
 
   @Get('/me')
   async me(@ActiveUser() userConnected: UserActiveI): Promise<UserResponseDto> {
-   return await this.userService.me(userConnected.sub)
+    return await this.userService.me(userConnected.sub);
   }
 
   @Get('/profile')
-  async dashboardByProfiling(@ActiveUser() userConnected:UserActiveI){
-    return await this.userService.userProfiling(userConnected.role)
+  dashboardByProfiling(@ActiveUser() userConnected: UserActiveI) {
+    return this.userService.userProfiling(userConnected.role);
   }
 
   @Patch()
-  async updateUser(@ActiveUser() {sub}:UserActiveI,@Body() updateUserDto:UpdateUserDto) {
-    return await this.userService.updateUser(sub,updateUserDto)
+  async updateUser(
+    @ActiveUser() { sub }: UserActiveI,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    return await this.userService.updateUser(sub, updateUserDto);
   }
-  
 }
