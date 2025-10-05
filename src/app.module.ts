@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ModelCarModule } from './infraestructure/model-car/model-car.module';
-import { FavoriteCarModule } from './infraestructure/favourite-car/favorite-car.module';
+import { FavoriteCarModule } from './infraestructure/favorite-car/favorite-car.module';
 import { PurchaseModule } from './infraestructure/purchase/purchase.module';
 import { ReviewModule } from './infraestructure/review/review.module';
 import { AuthModule } from './infraestructure/auth/auth.module';
