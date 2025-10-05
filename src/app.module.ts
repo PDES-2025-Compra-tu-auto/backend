@@ -35,7 +35,7 @@ import { UserModule } from './infraestructure/user/user.module';
     ReviewModule,
     PurchaseModule,
     AuthModule,
-    UserModule
+    UserModule,
   ],
   controllers: [],
   providers: [],

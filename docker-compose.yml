@@ -13,11 +13,11 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - /usr/share/zoneinfo:/usr/share/zoneinfo:ro      
-      - /etc/localtime:/etc/localtime:ro      
+      - /etc/localtime:/etc/localtime:ro
 
-  cta-backend:
-    image: diegomoronha/cta-backend:latest
-    container_name: cta-backend
+  app:
+    build: .
+    container_name: nest_app
     restart: always
     ports:
       - "${PORT}:4000"
@@ -29,21 +29,11 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: ${DB_NAME}
       JWT_SECRET: ${JWT_SECRET}
+    volumes:
+      - .:/usr/src/app           
+      - /usr/src/app/node_modules 
     depends_on:
       - db
 
-  cta-frontend:
-    image: diegomoronha/cta-frontend:latest
-    container_name: cta-frontend
-    restart: always
-    ports:
-      - "${PORT}:80"
-    environment:
-      FE_BACKEND_API: http://cta-backend:4000
-    depends_on:
-      - cta-backend
-
-
-
 volumes:
-  postgres_data:
+  postgres_data: {}

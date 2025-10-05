@@ -20,6 +20,7 @@ import { AuthGuard } from 'src/infraestructure/guards/auth.guard';
 import { RolesGuard } from 'src/infraestructure/guards/roles.guard';
 import { Roles } from 'src/infraestructure/decorators/roles.decorator';
 import { UserRole } from 'src/domain/user/enums/UserRole';
+import { SaleCarResponseDto } from '../dto/sale-car-response.dto';
 
 @ApiTags('SaleCar')
 @ApiBearerAuth()
@@ -34,7 +35,7 @@ export class SaleCarController {
   create(
     @Body() dto: CreateSaleCarDto,
     @ActiveUser() userSesionActive: UserActiveI,
-  ): Promise<SaleCar> {
+  ): Promise<SaleCarResponseDto> {
     return this.saleCarService.create(dto, userSesionActive);
   }
 
