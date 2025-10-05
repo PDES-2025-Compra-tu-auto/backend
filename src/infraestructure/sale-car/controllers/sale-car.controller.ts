@@ -25,7 +25,7 @@ import { SaleCarResponseDto } from '../dto/sale-car-response.dto';
 @ApiTags('SaleCar')
 @ApiBearerAuth()
 @UseGuards(AuthGuard)
-@Controller('saleCar')
+@Controller('sale-car')
 export class SaleCarController {
   constructor(private readonly saleCarService: SaleCarService) {}
 
