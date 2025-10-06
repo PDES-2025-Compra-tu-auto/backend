@@ -8,6 +8,7 @@ import { ReviewModule } from './infraestructure/review/review.module';
 import { AuthModule } from './infraestructure/auth/auth.module';
 import { SaleCarModule } from './infraestructure/sale-car/sale-car.module';
 import { UserModule } from './infraestructure/user/user.module';
+import { AdminModule } from './infraestructure/admin/admin.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { UserModule } from './infraestructure/user/user.module';
     PurchaseModule,
     AuthModule,
     UserModule,
+    AdminModule,
   ],
   controllers: [],
   providers: [],
