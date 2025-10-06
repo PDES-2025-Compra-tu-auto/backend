@@ -1,6 +1,6 @@
 import { Expose, Type } from 'class-transformer';
 import { StatusCar } from 'src/domain/car/enums/StatusCar';
-import { ModelCarDto } from 'src/infraestructure/model-car/dto/model-car.dto';
+import { ModelCarDto } from 'src/infraestructure/model-car/dto/model-car-response.dto';
 
 export class ConcesionaryDto {
   id: string;
