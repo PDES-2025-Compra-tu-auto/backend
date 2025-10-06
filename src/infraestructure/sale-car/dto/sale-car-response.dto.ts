@@ -3,6 +3,7 @@ import { StatusCar } from 'src/domain/car/enums/StatusCar';
 import { ModelCarDto } from 'src/infraestructure/model-car/dto/model-car-response.dto';
 
 export class ConcesionaryDto {
+  @Expose()
   id: string;
 
   @Expose()
@@ -13,13 +14,17 @@ export class SaleCarResponseDto {
   @Expose()
   id: string;
 
+  @Expose()
   price: number;
+
+  @Expose()
   status: StatusCar;
 
   @Expose()
   @Type(() => ModelCarDto)
   modelCar: ModelCarDto;
 
+  @Expose()
   @Type(() => ConcesionaryDto)
   concesionary: ConcesionaryDto;
 }

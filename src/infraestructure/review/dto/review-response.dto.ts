@@ -1,6 +1,7 @@
 // review-response.dto.ts
 import { Expose, Type } from 'class-transformer';
 import { ModelCarDto } from 'src/infraestructure/model-car/dto/model-car-response.dto';
+import { UserResponseDto } from 'src/infraestructure/user/dto/user-response.dto';
 
 export class ReviewResponseDto {
   @Expose()
@@ -18,4 +19,8 @@ export class ReviewResponseDto {
   @Expose()
   @Type(() => ModelCarDto)
   modelCar: ModelCarDto;
+
+  @Expose()
+  @Type(() => UserResponseDto)
+  buyer: UserResponseDto;
 }

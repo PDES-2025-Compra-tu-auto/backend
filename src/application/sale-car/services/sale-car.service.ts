@@ -41,18 +41,22 @@ export class SaleCarService {
     });
   }
 
-  async findAll(status?: StatusCar): Promise<SaleCar[]> {
+  async findAll(status?: StatusCar): Promise<SaleCarResponseDto[]> {
     const whereClause = status ? { status } : {};
-    return this.saleCarRepo.find({
+    const saleCars = await this.saleCarRepo.find({
       where: whereClause,
-      relations: ['modelCar'],
+      relations: ['modelCar', 'concesionary'],
+    });
+
+    return plainToInstance(SaleCarResponseDto, saleCars, {
+      excludeExtraneousValues: true,
     });
   }
 
   async findSaleCar(
     id: string,
     relations: string[] = ['modelCar'],
-  ): Promise<SaleCar> {
+  ): Promise<SaleCarResponseDto> {
     const saleCar = await this.saleCarRepo.findOne({
       where: { id },
       relations,
@@ -62,10 +66,12 @@ export class SaleCarService {
       throw new NotFoundException(`SaleCar with id ${id} not found`);
     }
 
-    return saleCar;
+    return plainToInstance(SaleCarResponseDto, saleCar, {
+      excludeExtraneousValues: true,
+    });
   }
 
-  async update(id: string, dto: UpdateSaleCarDto): Promise<SaleCar> {
+  async update(id: string, dto: UpdateSaleCarDto): Promise<SaleCarResponseDto> {
     const { price, status } = dto;
 
     const updatedFields: Partial<SaleCar> = {};

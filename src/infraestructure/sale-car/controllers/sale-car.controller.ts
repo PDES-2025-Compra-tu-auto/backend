@@ -9,13 +9,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { SaleCarService } from 'src/application/sale-car/services/sale-car.service';
-import { SaleCar } from 'src/domain/car/entities/SaleCar';
 import { ActiveUser } from 'src/infraestructure/decorators/active-user.decorator';
 import type { UserActiveI } from 'src/infraestructure/interfaces/user-active.interface';
 import { CreateSaleCarDto } from '../dto/create-sale-car.dto';
 import { UpdateSaleCarDto } from '../dto/update-sale.car.dto';
 import { StatusCar } from 'src/domain/car/enums/StatusCar';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/infraestructure/guards/auth.guard';
 import { RolesGuard } from 'src/infraestructure/guards/roles.guard';
 import { Roles } from 'src/infraestructure/decorators/roles.decorator';
@@ -39,13 +38,19 @@ export class SaleCarController {
     return this.saleCarService.create(dto, userSesionActive);
   }
 
+  @ApiQuery({
+    name: 'status',
+    enum: StatusCar,
+    required: false,
+    description: 'Filtrar por status',
+  })
   @Get()
-  findAll(@Query('status') status?: StatusCar): Promise<SaleCar[]> {
+  findAll(@Query('status') status?: StatusCar): Promise<SaleCarResponseDto[]> {
     return this.saleCarService.findAll(status);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<SaleCar> {
+  findOne(@Param('id') id: string): Promise<SaleCarResponseDto> {
     return this.saleCarService.findSaleCar(id);
   }
 
@@ -55,7 +60,7 @@ export class SaleCarController {
   update(
     @Param('id') id: string,
     @Body() dto: UpdateSaleCarDto,
-  ): Promise<SaleCar> {
+  ): Promise<SaleCarResponseDto> {
     return this.saleCarService.update(id, dto);
   }
 }
