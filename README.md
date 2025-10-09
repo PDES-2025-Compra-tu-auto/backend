@@ -38,17 +38,13 @@
 3. Levantar los servicios necesarios (por ahora solo la base de datos PostgreSQL) con Docker Compose:
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
-Luego correr la app con 
-```bash
-npm run start
-```
 
 ## ¿Como probar la api?
 ## Swagger.
-
+[localhost:/4000/api](http://localhost:4000/api)
 
 
 ### Para Swagger:
