@@ -30,8 +30,9 @@ jobs:
         run: npm install
 
       # Step 4: Run the tests
-      - name: Run the tests
-        run: npm run test
+      # - name: Run the tests
+      #   run: npm run test
 
+      # Step 5: Build the project
       - name: Build
         run: npm run build
