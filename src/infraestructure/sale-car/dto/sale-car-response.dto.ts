@@ -8,6 +8,9 @@ export class ConcesionaryDto {
 
   @Expose()
   concessionaryName: string;
+
+  @Expose()
+  email:string
 }
 
 export class SaleCarResponseDto {
