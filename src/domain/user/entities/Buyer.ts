@@ -1,9 +1,9 @@
-import { Entity, OneToMany, Column } from 'typeorm';
+import { Entity, OneToMany, Column, ChildEntity } from 'typeorm';
 import { User } from './User';
 import { FavoriteCar } from 'src/domain/favoriteCar/entities/FavoriteCar';
 import { Purchase } from 'src/domain/purchase/entities/Purchase';
 
-@Entity()
+@ChildEntity('BUYER')
 export class Buyer extends User {
   @OneToMany(() => FavoriteCar, (favorite: FavoriteCar) => favorite.buyer)
   favorites: FavoriteCar[];

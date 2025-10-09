@@ -14,6 +14,8 @@ async function bootstrap() {
       transform: true,
     }),
   );
+  app.enableCors();
+  app.setGlobalPrefix('api');
 
   const configService = app.get(ConfigService);
   const port = configService.get<number>('PORT') ?? 3000;
@@ -22,10 +24,11 @@ async function bootstrap() {
     .setTitle('CTA Compra tu auto :)')
     .setDescription('API para gestión de usuarios, autos y compras')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('api/docs', app, document);
 
   await app.listen(port);
 }

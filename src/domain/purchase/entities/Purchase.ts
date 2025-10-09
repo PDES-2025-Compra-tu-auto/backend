@@ -1,7 +1,7 @@
 import { SaleCar } from 'src/domain/car/entities/SaleCar';
-import { ConcessionaryAgency } from 'src/domain/concessionaryAgency/entities/ConcessionaryAgency';
 import { Buyer } from 'src/domain/user/entities/Buyer';
-import { Concessionary } from 'src/domain/user/entities/Concessionary';
+import { Concesionary } from 'src/domain/user/entities/Concesionary';
+
 import {
   Column,
   CreateDateColumn,
@@ -22,11 +22,8 @@ export class Purchase {
   @ManyToOne(() => SaleCar, (car: SaleCar) => car.purchases)
   saleCar: SaleCar;
 
-  @ManyToOne(() => ConcessionaryAgency)
-  agency: ConcessionaryAgency;
-
   @Column('decimal')
-  precioComprado: number;
+  purchasedPrice: number;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -34,6 +31,9 @@ export class Purchase {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToOne(() => Concessionary, (concessionary) => concessionary.sales)
-  soldBy: Concessionary;
+  @Column()
+  patent: string;
+
+  @ManyToOne(() => Concesionary, (concesionary) => concesionary.sales)
+  soldBy: Concesionary;
 }
