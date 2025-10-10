@@ -17,22 +17,33 @@ jobs:
     steps:
       # Step 1: Check out the code
       - name: Check out repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # Step 2: Set up Node.js
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 20.11.1
 
       # Step 3: Install dependencies
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
-      # Step 4: Run the tests
+      # Step 4: Run the tests (optional)
       # - name: Run the tests
       #   run: npm run test
 
       # Step 5: Build the project
       - name: Build
         run: npm run build
+
+      # Step 6: Analyze with SonarCloud
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@v2
+        with:
+          args: >
+            -Dsonar.projectKey=PDES-2025-Compra-tu-auto_backend
+            -Dsonar.organization=pdes-2025-compra-tu-auto
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
