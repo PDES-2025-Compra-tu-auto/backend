@@ -36,14 +36,3 @@ jobs:
       # Step 5: Build the project
       - name: Build
         run: npm run build
-
-      # Step 6: Analyze with SonarCloud
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@v2
-        with:
-          args: >
-            -Dsonar.projectKey=PDES-2025-Compra-tu-auto_backend
-            -Dsonar.organization=pdes-2025-compra-tu-auto
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
