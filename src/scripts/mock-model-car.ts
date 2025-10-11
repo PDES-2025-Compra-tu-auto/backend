@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { Admin, DataSource } from 'typeorm';
+import { DataSource } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import * as bcrypt from 'bcrypt';
 
@@ -13,6 +13,7 @@ import { StatusCar } from 'src/domain/car/enums/StatusCar';
 import { User } from 'src/domain/user/entities/User';
 import { Review } from 'src/domain/review/entities/Review';
 import { Purchase } from 'src/domain/purchase/entities/Purchase';
+import { Admin } from 'src/domain/user/entities/Admin';
 
 // ⚙️ Configurá tu conexión TypeORM
 const AppDataSource = new DataSource({
@@ -44,6 +45,8 @@ export async function mockData() {
   const modelCarRepo = AppDataSource.getRepository(ModelCar);
   const userRepo = AppDataSource.getRepository(Buyer);
   const concesionaryRepo = AppDataSource.getRepository(Concesionary);
+  const adminRepo = AppDataSource.getRepository(Admin);
+
   const saleCarRepo = AppDataSource.getRepository(SaleCar);
   const favoriteCarRepo = AppDataSource.getRepository(FavoriteCar);
 
@@ -87,7 +90,6 @@ export async function mockData() {
     );
     console.log('✅ Buyer insertado');
 
-    // 3. Crear concesionario
     const concesionary = await concesionaryRepo.save(
       concesionaryRepo.create({
         email: 'dealer@example.com',
@@ -97,6 +99,16 @@ export async function mockData() {
       }),
     );
     console.log('✅ Concesionario insertado');
+
+    await adminRepo.save(
+      adminRepo.create({
+        email: 'admin@example.com',
+        password,
+        fullname: 'User Admin',
+        role: UserRole.ADMINISTRATOR,
+      }),
+    );
+    console.log('✅ Administrador insertado');
 
     const saleCars = await saleCarRepo.save([
       saleCarRepo.create({
@@ -114,7 +126,6 @@ export async function mockData() {
     ]);
     console.log('✅ Autos en venta insertados');
 
-    // 5. Agregar favoritos
     await favoriteCarRepo.save(
       favoriteCarRepo.create({
         buyer,
