@@ -7,6 +7,7 @@ import { UserRole } from 'src/domain/user/enums/UserRole';
 import { ModelCarService } from 'src/application/model-car/services/model-car.service';
 import { CreateModelCarDto } from '../dto/create-model-car.dto';
 import { UuidParam } from 'src/infraestructure/decorators/uuui-param.decorator';
+import { ModelCarDto } from '../dto/model-car-response.dto';
 
 @ApiTags('ModelCar')
 @ApiBearerAuth()
@@ -22,7 +23,7 @@ export class ModelCarController {
   }
 
   @Get()
-  getAllModels() {
+  getAllModels(): Promise<ModelCarDto[]> {
     return this.modelCarService.findAll();
   }
 
