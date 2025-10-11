@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ModelCarService } from 'src/application/model-car/services/model-car.service';
 import { SaleCar } from 'src/domain/car/entities/SaleCar';
@@ -10,6 +14,7 @@ import { Repository } from 'typeorm';
 import { UserService } from 'src/application/user/services/user.service';
 import { plainToInstance } from 'class-transformer';
 import { SaleCarResponseDto } from 'src/infraestructure/sale-car/dto/sale-car-response.dto';
+import { FavoriteCar } from 'src/domain/favoriteCar/entities/FavoriteCar';
 
 @Injectable()
 export class SaleCarService {
@@ -18,6 +23,8 @@ export class SaleCarService {
     private readonly saleCarRepo: Repository<SaleCar>,
     private readonly modelCarService: ModelCarService,
     private readonly userService: UserService,
+    @InjectRepository(FavoriteCar)
+    private readonly favoriteCarRepo: Repository<FavoriteCar>,
   ) {}
 
   async create(
@@ -41,14 +48,32 @@ export class SaleCarService {
     });
   }
 
-  async findAll(status?: StatusCar): Promise<SaleCarResponseDto[]> {
+  async findAll(
+    buyerId?: string,
+    status?: StatusCar,
+  ): Promise<SaleCarResponseDto[]> {
     const whereClause = status ? { status } : {};
     const saleCars = await this.saleCarRepo.find({
       where: whereClause,
       relations: ['modelCar', 'concesionary'],
     });
 
-    return plainToInstance(SaleCarResponseDto, saleCars, {
+    let favoritedIds: string[] = [];
+
+    if (buyerId) {
+      const favorites = await this.favoriteCarRepo.find({
+        where: { buyer: { id: buyerId } },
+        relations: ['saleCar'],
+      });
+      favoritedIds = favorites.map((fav) => fav.saleCar.id);
+    }
+
+    const result = saleCars.map((car) => ({
+      ...car,
+      favoritedByUser: favoritedIds.includes(car.id),
+    }));
+
+    return plainToInstance(SaleCarResponseDto, result, {
       excludeExtraneousValues: true,
     });
   }
@@ -56,6 +81,7 @@ export class SaleCarService {
   async findSaleCar(
     id: string,
     relations: string[] = ['modelCar'],
+    buyerId?: string,
   ): Promise<SaleCarResponseDto> {
     const saleCar = await this.saleCarRepo.findOne({
       where: { id },
@@ -66,12 +92,42 @@ export class SaleCarService {
       throw new NotFoundException(`SaleCar with id ${id} not found`);
     }
 
-    return plainToInstance(SaleCarResponseDto, saleCar, {
-      excludeExtraneousValues: true,
-    });
+    let favoritedByUser = false;
+
+    if (buyerId) {
+      const favorite = await this.favoriteCarRepo.findOne({
+        where: { saleCar: { id }, buyer: { id: buyerId } },
+      });
+      favoritedByUser = !!favorite;
+    }
+
+    return plainToInstance(
+      SaleCarResponseDto,
+      { ...saleCar, favoritedByUser },
+      {
+        excludeExtraneousValues: true,
+      },
+    );
   }
 
-  async update(id: string, dto: UpdateSaleCarDto): Promise<SaleCarResponseDto> {
+  async update(
+    id: string,
+    dto: UpdateSaleCarDto,
+    concesionaryId: string,
+  ): Promise<SaleCarResponseDto> {
+    const saleCar = await this.saleCarRepo.findOne({
+      where: { id },
+      relations: ['concesionary'],
+    });
+
+    if (!saleCar) {
+      throw new NotFoundException(`SaleCar with id ${id} not found`);
+    }
+
+    if (saleCar.concesionary.id !== concesionaryId) {
+      throw new ForbiddenException('No tenés permiso para editar este auto');
+    }
+
     const { price, status } = dto;
 
     const updatedFields: Partial<SaleCar> = {};

@@ -1,9 +1,12 @@
-import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { PurchaseService } from 'src/application/purchase/services/purchase.service';
+import { UserRole } from 'src/domain/user/enums/UserRole';
 import { ActiveUser } from 'src/infraestructure/decorators/active-user.decorator';
+import { Roles } from 'src/infraestructure/decorators/roles.decorator';
+import { UuidParam } from 'src/infraestructure/decorators/uuui-param.decorator';
 import { AuthGuard } from 'src/infraestructure/guards/auth.guard';
-import { CreatePurchaseDto } from '../dto/create-purchase.dto';
+import { RolesGuard } from 'src/infraestructure/guards/roles.guard';
 import type { UserActiveI } from 'src/infraestructure/interfaces/user-active.interface';
 
 @ApiTags('Purchases')
@@ -13,19 +16,21 @@ import type { UserActiveI } from 'src/infraestructure/interfaces/user-active.int
 export class PurchaseController {
   constructor(private readonly purchaseService: PurchaseService) {}
 
+  @UseGuards(RolesGuard)
+  @Roles(UserRole.CONCESIONARY)
   @Get('dealership-sales')
   async getMySales(@ActiveUser() user: UserActiveI) {
     return this.purchaseService.findAllByConcesionary(user.sub);
   }
 
-  @Post()
-  async createPurchase(@Body() dto: CreatePurchaseDto) {
-    return this.purchaseService.createPurchase(
-      dto.buyerId,
-      dto.saleCarId,
-      dto.concessionaryId,
-      dto.purchasedPrice,
-      dto.patent,
-    );
+  @UseGuards(RolesGuard)
+  @Roles(UserRole.BUYER)
+  @Post(':saleCarId')
+  async createPurchase(
+    @UuidParam('saleCarId') saleCarId: string,
+    @ActiveUser() user: UserActiveI,
+  ) {
+    const buyerId = user.sub;
+    return this.purchaseService.createPurchase(buyerId, saleCarId);
   }
 }

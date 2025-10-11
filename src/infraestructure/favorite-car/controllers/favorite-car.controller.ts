@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { FavoriteCarService } from 'src/domain/favoriteCar/services/favorite-car.service';
 import { AddFavoriteCarDto } from '../dtos/add-favorite-car.dto';
@@ -16,6 +8,7 @@ import { UserRole } from 'src/domain/user/enums/UserRole';
 import { Roles } from 'src/infraestructure/decorators/roles.decorator';
 import { ActiveUser } from 'src/infraestructure/decorators/active-user.decorator';
 import type { UserActiveI } from 'src/infraestructure/interfaces/user-active.interface';
+import { UuidParam } from 'src/infraestructure/decorators/uuui-param.decorator';
 
 @ApiTags('FavoriteCar')
 @ApiBearerAuth()
@@ -41,7 +34,7 @@ export class FavoriteCarController {
   @Delete(':id')
   async removeFavoriteCar(
     @ActiveUser() user: UserActiveI,
-    @Param('id') id: string,
+    @UuidParam('id') id: string,
   ) {
     return await this.favoriteCarService.removeFavoriteCar(id, user.sub);
   }
