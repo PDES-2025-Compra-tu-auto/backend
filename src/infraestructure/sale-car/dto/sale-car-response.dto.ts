@@ -18,7 +18,7 @@ export class SaleCarResponseDto {
   id: string;
 
   @Expose()
-  favoriteId?:string
+  favoriteId:string|null
 
   @Expose()
   price: number;

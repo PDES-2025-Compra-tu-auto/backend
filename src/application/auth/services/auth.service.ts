@@ -24,9 +24,7 @@ export class AuthService {
 
   async refreshToken(token: string) {
     try {
-      const payload = await this.jwtService.verifyAsync(token, {
-        ignoreExpiration: true,
-      });
+      const payload = await this.jwtService.verifyAsync(token);
 
       const newAccessToken = this.jwtService.sign(
         { sub: payload.sub, role: payload.role },

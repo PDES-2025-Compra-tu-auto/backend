@@ -60,7 +60,7 @@ export class SaleCarController {
   ): Promise<SaleCarResponseDto> {
     const buyerId = userSesionActive.sub;
 
-    return this.saleCarService.findSaleCar(id, ['modelCar'], buyerId);
+    return this.saleCarService.findSaleCar(id, ['modelCar','concesionary'], buyerId);
   }
 
   @UseGuards(RolesGuard)
