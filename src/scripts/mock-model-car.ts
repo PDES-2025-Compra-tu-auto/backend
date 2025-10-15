@@ -39,7 +39,9 @@ const AppDataSource = new DataSource({
 });
 
 export async function mockData() {
-  await AppDataSource.initialize();
+  if (!AppDataSource.isInitialized) {
+    await AppDataSource.initialize();
+  }
   console.log('🔌 Conectado a la base de datos');
 
   const modelCarRepo = AppDataSource.getRepository(ModelCar);
@@ -142,5 +144,3 @@ export async function mockData() {
     console.log('🔌 Conexión cerrada');
   }
 }
-
-void mockData();

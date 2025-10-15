@@ -32,8 +32,8 @@ jobs:
         run: npm ci
 
       # Step 4: Run the tests (optional)
-      # - name: Run the tests
-      #   run: npm run test
+      - name: Run the tests
+        run: npm run test
 
       # Step 5: Build the project
       - name: Build
