@@ -1,4 +1,3 @@
-import { Expose } from 'class-transformer';
 import { IsOptional } from 'class-validator';
 import { UserStatus } from 'src/domain/user/enums/UserStatus';
 

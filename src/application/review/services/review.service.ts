@@ -61,7 +61,7 @@ export class ReviewService {
 
     const reviews = await this.reviewRepository.find({
       where: { modelCar },
-      relations: ['modelCar','buyer'],
+      relations: ['modelCar', 'buyer'],
       order: { createdAt: 'DESC' },
     });
 
