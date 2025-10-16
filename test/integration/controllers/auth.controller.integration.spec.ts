@@ -1,10 +1,11 @@
+// test/auth.controller.integration.spec.ts
 import { Test } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthService } from 'src/application/auth/services/auth.service';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthController } from 'src/infraestructure/auth/controllers/auth.controller';
 import { User } from 'src/domain/user/entities/User';
 import { UserRole } from 'src/domain/user/enums/UserRole';
-import { AuthService } from 'src/application/auth/services/auth.service';
 
 describe('AuthController Integration', () => {
   let authController: AuthController;

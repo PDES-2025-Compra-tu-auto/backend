@@ -44,7 +44,7 @@ import { mockData } from './scripts/mock-model-car';
   providers: [],
 })
 export class AppModule implements OnModuleInit {
-  onModuleInit() {
-    mockData()
+  async onModuleInit() {
+    await mockData();
   }
 }

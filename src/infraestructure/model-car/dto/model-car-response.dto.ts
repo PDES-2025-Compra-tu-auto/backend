@@ -14,5 +14,5 @@ export class ModelCarDto {
   description: string;
 
   @Expose()
-  imageUrl?:string
+  imageUrl?: string;
 }

@@ -42,14 +42,14 @@ export class AuthService {
     }
   }
 
-  async login({email,password}:LoginDto) {
+  async login({ email, password }: LoginDto) {
     const user = await this.userRepository.findOne({ where: { email } });
 
     if (!user) {
       throw new NotFoundException('User not found');
     }
 
-    if(user.status=== UserStatus.INACTIVE){
+    if (user.status === UserStatus.INACTIVE) {
       throw new UnauthorizedException('User is inactive');
     }
 
@@ -58,7 +58,12 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const payload = { sub: user.id, role: user.role, fullname: user.fullname, email: user.email };
+    const payload = {
+      sub: user.id,
+      role: user.role,
+      fullname: user.fullname,
+      email: user.email,
+    };
 
     const accessToken = this.jwtService.sign(payload, { expiresIn: '1h' });
     const refreshToken = this.jwtService.sign(payload, { expiresIn: '6h' });
@@ -76,7 +81,9 @@ export class AuthService {
   }
 
   async register(dto: RegisterDto) {
-    const existingUser = await this.userRepository.findOne({ where: { email: dto.email } });
+    const existingUser = await this.userRepository.findOne({
+      where: { email: dto.email },
+    });
     if (existingUser) {
       throw new BadRequestException('User already exists');
     }
@@ -90,7 +97,9 @@ export class AuthService {
 
     await this.userRepository.save(user);
 
-    const userCreated = await this.userRepository.findOne({ where: { email: dto.email } });
+    const userCreated = await this.userRepository.findOne({
+      where: { email: dto.email },
+    });
     const userResponse = plainToInstance(RegisterResponseDto, userCreated, {
       excludeExtraneousValues: true,
     });

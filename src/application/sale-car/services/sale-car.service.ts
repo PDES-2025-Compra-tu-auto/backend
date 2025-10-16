@@ -58,7 +58,7 @@ export class SaleCarService {
       relations: ['modelCar', 'concesionary'],
     });
 
-    let favorites:FavoriteCar[]|undefined;
+    let favorites: FavoriteCar[] | undefined;
 
     if (buyerId) {
       favorites = await this.favoriteCarRepo.find({
@@ -68,11 +68,12 @@ export class SaleCarService {
     }
 
     const result = saleCars.map((car) => {
-      const favorite = favorites?.find((fav)=> fav.saleCar.id === car.id)
-      return {...car,
-      favoriteId: favorite?favorite.id:null,
-      favoritedByUser: !!favorite,
-    }
+      const favorite = favorites?.find((fav) => fav.saleCar.id === car.id);
+      return {
+        ...car,
+        favoriteId: favorite ? favorite.id : null,
+        favoritedByUser: !!favorite,
+      };
     });
 
     return plainToInstance(SaleCarResponseDto, result, {
@@ -95,18 +96,18 @@ export class SaleCarService {
     }
 
     let favoritedByUser = false;
-    let favoriteId:string|undefined
+    let favoriteId: string | undefined;
     if (buyerId) {
       const favorite = await this.favoriteCarRepo.findOne({
         where: { saleCar: { id }, buyer: { id: buyerId } },
       });
-      favoriteId = favorite?.id
+      favoriteId = favorite?.id;
       favoritedByUser = !!favorite;
     }
 
     return plainToInstance(
       SaleCarResponseDto,
-      { ...saleCar, favoritedByUser,favoriteId: favoriteId?? null },
+      { ...saleCar, favoritedByUser, favoriteId: favoriteId ?? null },
       {
         excludeExtraneousValues: true,
       },

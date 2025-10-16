@@ -24,7 +24,7 @@ export class ModelCarService {
   async findById(id: string): Promise<ModelCarDto> {
     const model = await this.modelCarRepo.findOne({ where: { id } });
     if (!model) throw new NotFoundException(`ModelCar ${id} not found`);
-    return plainToInstance(ModelCarDto,model,{
+    return plainToInstance(ModelCarDto, model, {
       excludeExtraneousValues: true,
     });
   }

@@ -8,7 +8,6 @@ import {
 } from '@nestjs/common';
 import { UserStatus } from '../../../src/domain/user/enums/UserStatus';
 import { AuthService } from '../../../src/application/auth/services/auth.service';
-import { RegisterDto } from 'src/infraestructure/auth/dtos/register.dto';
 
 jest.mock('bcrypt', () => ({
   compare: jest.fn(),
@@ -58,7 +57,7 @@ describe('AuthService', () => {
     (service as any).userRepository = userRepository;
     (service as any).jwtService = jwtService;
 
-    jest.clearAllMocks();
+    jest.clearAllMocks(); 
   });
 
   describe('refreshToken', () => {
@@ -131,7 +130,7 @@ describe('AuthService', () => {
 
     it('should return tokens on valid login', async () => {
       userRepository.findOne.mockResolvedValue(user);
-      (bcrypt.compare as jest.Mock).mockResolvedValueOnce(true);
+      (bcrypt.compare as jest.Mock).mockResolvedValueOnce(true);  
 
       jwtService.sign.mockReturnValueOnce('accessToken');
       jwtService.sign.mockReturnValueOnce('refreshToken');
@@ -162,7 +161,7 @@ describe('AuthService', () => {
     it('should throw BadRequestException if user already exists', async () => {
       userRepository.findOne.mockResolvedValue(userCreated);
 
-      await expect(service.register(dto as RegisterDto)).rejects.toThrow(
+      await expect(service.register(dto as any)).rejects.toThrow(
         BadRequestException,
       );
     });
@@ -174,7 +173,7 @@ describe('AuthService', () => {
       userRepository.save.mockResolvedValue(null);
       userRepository.findOne.mockResolvedValueOnce(userCreated);
 
-      const result = await service.register(dto as RegisterDto);
+      const result = await service.register(dto as any);
 
       expect(userRepository.create).toHaveBeenCalledWith({
         ...dto,
