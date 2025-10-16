@@ -10,12 +10,15 @@ export class ConcesionaryDto {
   concessionaryName: string;
 
   @Expose()
-  email:string
+  email: string;
 }
 
 export class SaleCarResponseDto {
   @Expose()
   id: string;
+
+  @Expose()
+  favoriteId: string | null;
 
   @Expose()
   price: number;
@@ -30,4 +33,7 @@ export class SaleCarResponseDto {
   @Expose()
   @Type(() => ConcesionaryDto)
   concesionary: ConcesionaryDto;
+
+  @Expose()
+  favoritedByUser?: boolean;
 }

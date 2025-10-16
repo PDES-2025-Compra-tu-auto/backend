@@ -33,17 +33,15 @@ export class PurchaseService {
   async createPurchase(
     buyerId: string,
     saleCarId: string,
-    concesionaryId: string,
-    purchasedPrice: number,
-    patent: string,
   ): Promise<PurchaseResponseDto> {
     const buyer = await this.userService.findEntityById(buyerId);
-    const concesionary = await this.userService.findEntityById(concesionaryId);
     const saleCar = await this.saleCarService.findSaleCar(saleCarId, [
       'concesionary',
       'modelCar',
     ]);
-
+    const concesionary = saleCar.concesionary;
+    const purchasedPrice = saleCar.price;
+    const patent = new Date().getFullYear().toString();
     const purchase = this.purchaseRepository.create({
       buyer,
       saleCar,

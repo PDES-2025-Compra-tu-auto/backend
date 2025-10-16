@@ -1,4 +1,4 @@
-import { Entity, OneToMany, Column, ChildEntity } from 'typeorm';
+import { OneToMany, Column, ChildEntity } from 'typeorm';
 import { User } from './User';
 import { FavoriteCar } from 'src/domain/favoriteCar/entities/FavoriteCar';
 import { Purchase } from 'src/domain/purchase/entities/Purchase';

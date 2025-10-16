@@ -21,13 +21,18 @@ export class ModelCarService {
     });
   }
 
-  async findById(id: string): Promise<ModelCar> {
+  async findById(id: string): Promise<ModelCarDto> {
     const model = await this.modelCarRepo.findOne({ where: { id } });
     if (!model) throw new NotFoundException(`ModelCar ${id} not found`);
-    return model;
+    return plainToInstance(ModelCarDto, model, {
+      excludeExtraneousValues: true,
+    });
   }
 
-  findAll(): Promise<ModelCar[]> {
-    return this.modelCarRepo.find();
+  async findAll(): Promise<ModelCarDto[]> {
+    const models = await this.modelCarRepo.find();
+    return plainToInstance(ModelCarDto, models, {
+      excludeExtraneousValues: true,
+    });
   }
 }

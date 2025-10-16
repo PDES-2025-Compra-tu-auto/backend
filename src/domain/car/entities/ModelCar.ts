@@ -17,4 +17,7 @@ export class ModelCar {
 
   @OneToMany(() => Review, (review) => review.modelCar)
   reviews: Review[];
+
+  @Column({ nullable: true })
+  imageUrl: string;
 }
