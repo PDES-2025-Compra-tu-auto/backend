@@ -66,4 +66,30 @@ export class AdminService {
       excludeExtraneousValues: true,
     });
   }
+
+  async getTopSoldCars() {
+    const topModels = await this.purchaseRepository
+      .createQueryBuilder('purchase')
+      .leftJoin('purchase.saleCar', 'saleCar')
+      .leftJoin('saleCar.modelCar', 'modelCar')
+      .select([
+        'modelCar.id AS id',
+        'modelCar.brand AS brand',
+        'modelCar.model AS model',
+        'modelCar.imageUrl AS imageUrl',
+        'COUNT(purchase.id) AS "totalSales"',
+      ])
+      .groupBy('modelCar.id')
+      .orderBy('"totalSales"', 'DESC')
+      .limit(5)
+      .getRawMany();
+
+    return topModels.map((item) => ({
+      id: item.id,
+      brand: item.brand,
+      model: item.model,
+      imageUrl: item.imageUrl,
+      totalSales: Number(item.totalSales),
+    }));
+  }
 }

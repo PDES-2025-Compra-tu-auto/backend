@@ -40,12 +40,12 @@ export class AdminController {
     return this.adminService.getAllPurchases();
   }
 
-  /*  @Get('reports/top-sold-cars')
+  @Get('reports/top-sold-cars')
   getTopSoldCars() {
     return this.adminService.getTopSoldCars();
   }
 
-  @Get('reports/top-buyers')
+  /*@Get('reports/top-buyers')
   getTopBuyers() {
     return this.adminService.getTopBuyers();
   }
