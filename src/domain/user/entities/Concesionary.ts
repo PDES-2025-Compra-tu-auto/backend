@@ -12,12 +12,11 @@ export class Concesionary extends User {
   concessionaryName: string;
 
   @Column()
-  concesionaryCuit:string
+  concesionaryCuit: string;
 
   @OneToMany(() => SaleCar, (car) => car.concesionary)
   carsForSale: SaleCar[];
 
   @Column({ default: 0 })
   totalSales: number;
-
 }

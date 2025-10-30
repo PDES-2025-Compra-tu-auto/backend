@@ -11,8 +11,7 @@ import { AuthService } from 'src/application/auth/services/auth.service';
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService:AuthService,
-  ) {}
+  constructor(private readonly authService: AuthService) {}
 
   @ApiOperation({ description: 'Sign In', summary: 'Sign In' })
   @Post('login')
@@ -33,10 +32,9 @@ export class AuthController {
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
   @Post('validate')
-  async validate(@ActiveUser() userSession:UserActiveI) {
-    const {sub,...rest} = userSession
-    return {valid: true,id:sub,...rest }
-
+  validate(@ActiveUser() userSession: UserActiveI) {
+    const { sub, ...rest } = userSession;
+    return { valid: true, id: sub, ...rest };
   }
 
   @ApiBody({ schema: { properties: { token: { type: 'string' } } } })

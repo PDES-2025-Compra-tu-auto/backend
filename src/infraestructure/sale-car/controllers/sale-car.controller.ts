@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   Get,
-  Param,
   Patch,
   Post,
   Query,
@@ -20,6 +19,7 @@ import { RolesGuard } from 'src/infraestructure/guards/roles.guard';
 import { Roles } from 'src/infraestructure/decorators/roles.decorator';
 import { UserRole } from 'src/domain/user/enums/UserRole';
 import { SaleCarResponseDto } from '../dto/sale-car-response.dto';
+import { UuidParam } from 'src/infraestructure/decorators/uuui-param.decorator';
 
 @ApiTags('SaleCar')
 @ApiBearerAuth()
@@ -29,7 +29,7 @@ export class SaleCarController {
   constructor(private readonly saleCarService: SaleCarService) {}
 
   @UseGuards(RolesGuard)
-  @Roles(UserRole.CONCESIONARY, UserRole.ADMINISTRATOR)
+  @Roles(UserRole.CONCESIONARY)
   @Post()
   create(
     @Body() dto: CreateSaleCarDto,
@@ -45,22 +45,37 @@ export class SaleCarController {
     description: 'Filtrar por status',
   })
   @Get()
-  findAll(@Query('status') status?: StatusCar): Promise<SaleCarResponseDto[]> {
-    return this.saleCarService.findAll(status);
+  findAll(
+    @ActiveUser() userSesionActive: UserActiveI,
+    @Query('status') status?: StatusCar,
+  ): Promise<SaleCarResponseDto[]> {
+    const buyerId = userSesionActive.sub;
+    return this.saleCarService.findAll(buyerId, status);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<SaleCarResponseDto> {
-    return this.saleCarService.findSaleCar(id);
+  findOne(
+    @UuidParam('id') id: string,
+    @ActiveUser() userSesionActive: UserActiveI,
+  ): Promise<SaleCarResponseDto> {
+    const buyerId = userSesionActive.sub;
+
+    return this.saleCarService.findSaleCar(
+      id,
+      ['modelCar', 'concesionary'],
+      buyerId,
+    );
   }
 
   @UseGuards(RolesGuard)
-  @Roles(UserRole.CONCESIONARY, UserRole.ADMINISTRATOR)
+  @Roles(UserRole.CONCESIONARY)
   @Patch(':id')
   update(
-    @Param('id') id: string,
+    @UuidParam('id') id: string,
     @Body() dto: UpdateSaleCarDto,
+    @ActiveUser() user: UserActiveI,
   ): Promise<SaleCarResponseDto> {
-    return this.saleCarService.update(id, dto);
+    const concesionaryId = user.sub;
+    return this.saleCarService.update(id, dto, concesionaryId);
   }
 }

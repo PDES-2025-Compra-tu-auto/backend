@@ -9,5 +9,4 @@ export class LoginDto {
   @IsString()
   @MinLength(4)
   password: string;
-
 }

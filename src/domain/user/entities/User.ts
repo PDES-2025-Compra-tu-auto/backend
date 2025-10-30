@@ -9,7 +9,6 @@ import {
 import { UserRole } from '../enums/UserRole';
 import { UserStatus } from '../enums/UserStatus';
 
-
 @Entity()
 @TableInheritance({ column: { type: 'varchar', name: 'role_type' } })
 export abstract class User {
@@ -25,7 +24,7 @@ export abstract class User {
   @Column()
   fullname: string;
 
-  @Column({type: 'enum', enum: UserStatus, default: UserStatus.ACTIVE})
+  @Column({ type: 'enum', enum: UserStatus, default: UserStatus.ACTIVE })
   status: UserStatus;
 
   @Column({ type: 'enum', enum: UserRole })

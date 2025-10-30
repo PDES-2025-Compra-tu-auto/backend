@@ -5,7 +5,6 @@ import {
   Patch,
   Delete,
   Body,
-  Param,
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
@@ -18,6 +17,7 @@ import { ReviewService } from 'src/application/review/services/review.service';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
 import type { UserActiveI } from '../interfaces/user-active.interface';
+import { UuidParam } from '../decorators/uuui-param.decorator';
 
 @ApiTags('Reviews')
 @ApiBearerAuth()
@@ -34,7 +34,7 @@ export class ReviewController {
   }
 
   @Get('model/:modelCarId')
-  getReviewsByModel(@Param('modelCarId') modelCarId: string) {
+  getReviewsByModel(@UuidParam('modelCarId') modelCarId: string) {
     return this.reviewService.getReviewsByModel(modelCarId);
   }
 
@@ -48,7 +48,7 @@ export class ReviewController {
   @Patch(':reviewId')
   updateReview(
     @ActiveUser() user: UserActiveI,
-    @Param('reviewId') reviewId: string,
+    @UuidParam('reviewId') reviewId: string,
     @Body() dto: UpdateReviewDto,
   ) {
     return this.reviewService.updateReview(reviewId, user.sub, dto);
@@ -59,7 +59,7 @@ export class ReviewController {
   @Delete(':reviewId')
   deleteReview(
     @ActiveUser() user: UserActiveI,
-    @Param('reviewId') reviewId: string,
+    @UuidParam('reviewId') reviewId: string,
   ) {
     return this.reviewService.deleteReview(reviewId, user.sub);
   }
