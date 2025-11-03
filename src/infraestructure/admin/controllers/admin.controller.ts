@@ -40,7 +40,7 @@ export class AdminController {
     return this.adminService.getAllPurchases();
   }
 
-  /*  @Get('reports/top-sold-cars')
+  @Get('reports/top-sold-cars')
   getTopSoldCars() {
     return this.adminService.getTopSoldCars();
   }
@@ -58,5 +58,5 @@ export class AdminController {
   @Get('reports/top-agencies')
   getTopAgencies() {
     return this.adminService.getTopAgencies();
-  } */
+  }
 }
