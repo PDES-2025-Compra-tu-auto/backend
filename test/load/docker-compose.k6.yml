@@ -1,0 +1,39 @@
+services:
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: nestdb
+      POSTGRES_PASSWORD: nestpass
+      POSTGRES_DB: nestdb
+    ports:
+      - "5432:5432"
+  app:
+    build: ../../
+    container_name: load_test
+    restart: always
+    ports:
+      - "4001:4001"
+    environment:
+      PORT: 4001
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: nestdb
+      DB_PASSWORD: nestpass
+      DB_NAME: nestdb
+      JWT_SECRET: testsecret
+    depends_on:
+      - db
+
+  k6:
+    image: grafana/k6:latest
+    container_name: k6_runner
+    volumes:
+    - .:/test/load 
+    depends_on:
+      - app
+    working_dir: /test/load
+    environment:
+      HOST_URL: "http://app"           
+      HOST_PORT: "4001"
+    entrypoint: ["k6", "run","auth.test.js"]
