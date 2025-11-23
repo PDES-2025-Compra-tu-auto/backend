@@ -6,6 +6,7 @@ import { UserService } from 'src/application/user/services/user.service';
 import { SaleCarService } from 'src/application/sale-car/services/sale-car.service';
 import { plainToInstance } from 'class-transformer';
 import { PurchaseResponseDto } from 'src/infraestructure/purchase/dto/purchase-response.dto';
+import { MetricsService } from 'src/metrics/metrics.service';
 
 @Injectable()
 export class PurchaseService {
@@ -14,6 +15,7 @@ export class PurchaseService {
     private readonly purchaseRepository: Repository<Purchase>,
     private readonly userService: UserService,
     private readonly saleCarService: SaleCarService,
+    private readonly metricsService: MetricsService,
   ) {}
 
   async findAllByConcesionary(
@@ -63,6 +65,12 @@ export class PurchaseService {
     });
 
     const saved = await this.purchaseRepository.save(purchase);
+
+    this.metricsService.purchaseCount.inc();
+
+    this.metricsService.purchaseByDealership.labels(concesionary.id).inc();
+
+    this.metricsService.purchaseByModel.labels(saleCar.modelCar.id).inc();
 
     return plainToInstance(PurchaseResponseDto, saved, {
       excludeExtraneousValues: true,
