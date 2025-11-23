@@ -30,6 +30,18 @@ export class PurchaseService {
     });
   }
 
+  async findAllByBuyer(buyerId: string): Promise<PurchaseResponseDto[]> {
+    const purchases = await this.purchaseRepository.find({
+      where: { buyer: { id: buyerId } },
+      relations: ['buyer', 'saleCar', 'saleCar.modelCar', 'soldBy'],
+      order: { createdAt: 'DESC' },
+    });
+
+    return plainToInstance(PurchaseResponseDto, purchases, {
+      excludeExtraneousValues: true,
+    });
+  }
+
   async createPurchase(
     buyerId: string,
     saleCarId: string,

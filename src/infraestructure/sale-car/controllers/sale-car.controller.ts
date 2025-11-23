@@ -44,13 +44,32 @@ export class SaleCarController {
     required: false,
     description: 'Filtrar por status',
   })
+  @ApiQuery({ name: 'status', enum: StatusCar, required: false })
+  @ApiQuery({ name: 'keyword', required: false, type: String })
+  @ApiQuery({ name: 'minPrice', required: false, type: Number })
+  @ApiQuery({ name: 'maxPrice', required: false, type: Number })
+  @ApiQuery({ name: 'modelId', required: false, type: String })
+  @ApiQuery({ name: 'concesionaryId', required: false, type: String })
   @Get()
   findAll(
     @ActiveUser() userSesionActive: UserActiveI,
     @Query('status') status?: StatusCar,
+    @Query('keyword') keyword?: string,
+    @Query('minPrice') minPrice?: number,
+    @Query('maxPrice') maxPrice?: number,
+    @Query('modelId') modelId?: string,
+    @Query('concesionaryId') concesionaryId?: string,
   ): Promise<SaleCarResponseDto[]> {
     const buyerId = userSesionActive.sub;
-    return this.saleCarService.findAll(buyerId, status);
+
+    return this.saleCarService.findAll(buyerId, {
+      status,
+      keyword,
+      minPrice,
+      maxPrice,
+      modelId,
+      concesionaryId,
+    });
   }
 
   @Get(':id')

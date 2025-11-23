@@ -49,15 +49,53 @@ export class SaleCarService {
   }
 
   async findAll(
-    buyerId?: string,
-    status?: StatusCar,
+    buyerId: string,
+    filters: {
+      status?: StatusCar;
+      keyword?: string;
+      minPrice?: number;
+      maxPrice?: number;
+      modelId?: string;
+      concesionaryId?: string;
+    },
   ): Promise<SaleCarResponseDto[]> {
-    const whereClause = status ? { status } : {};
-    const saleCars = await this.saleCarRepo.find({
-      where: whereClause,
-      relations: ['modelCar', 'concesionary'],
-    });
+    const qb = this.saleCarRepo
+      .createQueryBuilder('saleCar')
+      .leftJoinAndSelect('saleCar.modelCar', 'modelCar')
+      .leftJoinAndSelect('saleCar.concesionary', 'concesionary');
 
+    if (filters.status) {
+      qb.andWhere('saleCar.status = :status', { status: filters.status });
+    }
+
+    if (filters.keyword) {
+      qb.andWhere(
+        '(LOWER(modelCar.model) LIKE LOWER(:kw) OR LOWER(modelCar.brand) LIKE LOWER(:kw))',
+        { kw: `%${filters.keyword}%` },
+      );
+    }
+
+    if (filters.minPrice) {
+      qb.andWhere('saleCar.price >= :minPrice', { minPrice: filters.minPrice });
+    }
+
+    if (filters.maxPrice) {
+      qb.andWhere('saleCar.price <= :maxPrice', { maxPrice: filters.maxPrice });
+    }
+
+    if (filters.modelId) {
+      qb.andWhere('modelCar.id = :modelId', { modelId: filters.modelId });
+    }
+
+    if (filters.concesionaryId) {
+      qb.andWhere('concesionary.id = :concesionaryId', {
+        concesionaryId: filters.concesionaryId,
+      });
+    }
+
+    const saleCars = await qb.getMany();
+
+    // favoritos
     let favorites: FavoriteCar[] | undefined;
 
     if (buyerId) {
