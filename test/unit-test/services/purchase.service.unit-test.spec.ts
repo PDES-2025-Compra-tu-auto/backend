@@ -92,7 +92,7 @@ describe('PurchaseService', () => {
       const mockBuyer = { id: buyerId, fullname: 'Test Buyer' };
       const mockSaleCar = {
         id: saleCarId,
-        concesionary: { id: 'cons-1', concessionaryName: 'Dealer SA' },
+        concesionary: { id: 'cons-1', fullname: 'Dealer SA' },
         price: 10000,
       };
       const mockPurchase = {
