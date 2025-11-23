@@ -27,16 +27,6 @@ export class RegisterDto {
   role: UserRole;
 
   @ValidateIf((o) => o.role === UserRole.CONCESIONARY)
-  @IsString({ message: 'concesionaryName must be a string' })
-  @IsNotEmpty({
-    message: 'concesionaryName is required when role is CONCESIONARY',
-  })
-  @Transform(({ obj, value }) =>
-    obj.role === UserRole.CONCESIONARY ? value : undefined,
-  )
-  concesionaryName?: string;
-
-  @ValidateIf((o) => o.role === UserRole.CONCESIONARY)
   @IsString({ message: 'concesionaryCuit must be a string' })
   @IsNotEmpty({
     message: 'concesionaryCuit is required when role is CONCECIONARY',

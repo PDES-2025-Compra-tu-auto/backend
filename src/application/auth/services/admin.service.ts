@@ -122,7 +122,7 @@ export class AdminService {
       .leftJoin('purchase.soldBy', 'concesionary')
       .select([
         'concesionary.id AS id',
-        'concesionary.concessionaryName AS name',
+        'concesionary.fullname AS name',
         'concesionary.concesionaryCuit AS cuit',
         'COUNT(purchase.id) AS "totalSales"',
       ])

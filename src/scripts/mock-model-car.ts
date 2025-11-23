@@ -97,6 +97,7 @@ export async function mockData() {
         email: 'dealer@example.com',
         password,
         fullname: 'Auto Concesionaria',
+        concesionaryCuit: '30234253623',
         role: UserRole.CONCESIONARY,
       }),
     );
