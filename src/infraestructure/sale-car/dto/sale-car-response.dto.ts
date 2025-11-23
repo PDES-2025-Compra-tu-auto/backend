@@ -7,7 +7,7 @@ export class ConcesionaryDto {
   id: string;
 
   @Expose()
-  concessionaryName: string;
+  fullname: string;
 
   @Expose()
   email: string;
