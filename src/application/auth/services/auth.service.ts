@@ -14,12 +14,14 @@ import { User } from 'src/domain/user/entities/User';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LoginDto } from 'src/infraestructure/auth/dtos/login.dto';
 import { UserStatus } from 'src/domain/user/enums/UserStatus';
+import { MetricsService } from 'src/metrics/metrics.service';
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly jwtService: JwtService,
+    private readonly metricsService: MetricsService,
   ) {}
 
   async refreshToken(token: string) {
@@ -96,6 +98,8 @@ export class AuthService {
     });
 
     await this.userRepository.save(user);
+
+    this.metricsService.usersRegistered.inc({ role: dto.role });
 
     const userCreated = await this.userRepository.findOne({
       where: { email: dto.email },

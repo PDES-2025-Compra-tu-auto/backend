@@ -4,6 +4,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthService } from 'src/application/auth/services/auth.service';
 import { AuthController } from './controllers/auth.controller';
 import { UserModule } from '../user/user.module';
+import { MetricsModule } from 'src/metrics/metrics.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { UserModule } from '../user/user.module';
       }),
     }),
     UserModule,
+    MetricsModule,
   ],
   controllers: [AuthController],
   providers: [AuthService],
