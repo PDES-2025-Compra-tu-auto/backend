@@ -11,6 +11,7 @@ import { PurchaseService } from '../../../src/application/purchase/services/purc
 import { PurchaseResponseDto } from '../../../src/infraestructure/purchase/dto/purchase-response.dto';
 import { SaleCarResponseDto } from 'src/infraestructure/sale-car/dto/sale-car-response.dto';
 import { User } from 'src/domain/user/entities/User';
+import { MetricsService } from 'src/metrics/metrics.service';
 
 describe('PurchaseService', () => {
   let service: PurchaseService;
@@ -32,6 +33,17 @@ describe('PurchaseService', () => {
       findSaleCar: jest.fn(),
     } as unknown as jest.Mocked<SaleCarService>;
 
+    const mockMetricsService = {
+      purchaseCount: { inc: jest.fn() },
+      purchaseByDealership: {
+        labels: jest.fn().mockReturnValue({ inc: jest.fn() }),
+      },
+      purchaseByModel: {
+        labels: jest.fn().mockReturnValue({ inc: jest.fn() }),
+      },
+      getMetrics: jest.fn().mockResolvedValue('mock-metrics'),
+    } as unknown as jest.Mocked<MetricsService>;
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         PurchaseService,
@@ -46,6 +58,10 @@ describe('PurchaseService', () => {
         {
           provide: SaleCarService,
           useValue: mockSaleCarService,
+        },
+        {
+          provide: MetricsService,
+          useValue: mockMetricsService as any,
         },
       ],
     }).compile();
@@ -74,6 +90,7 @@ describe('PurchaseService', () => {
 
     it('debería lanzar NotFoundException si no encuentra el saleCar', async () => {
       userService.findEntityById.mockResolvedValueOnce({ id: buyerId } as User);
+
       saleCarService.findSaleCar.mockRejectedValueOnce(
         new NotFoundException('SaleCar not found'),
       );
@@ -92,6 +109,7 @@ describe('PurchaseService', () => {
       const mockBuyer = { id: buyerId, fullname: 'Test Buyer' };
       const mockSaleCar = {
         id: saleCarId,
+        modelCar: { id: '2' },
         concesionary: { id: 'cons-1', fullname: 'Dealer SA' },
         price: 10000,
       };
