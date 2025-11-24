@@ -1,0 +1,36 @@
+
+networks:
+  prom-net:
+    external: true
+
+services:
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: nestdb
+      POSTGRES_PASSWORD: nestpass
+      POSTGRES_DB: nestdb
+    ports:
+      - "5434:5432"
+    networks:
+      - prom-net
+
+  app:
+    build: ../../
+    container_name: load_test
+    restart: always
+    ports:
+      - "4001:4001"
+    environment:
+      PORT: 4001
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: nestdb
+      DB_PASSWORD: nestpass
+      DB_NAME: nestdb
+      JWT_SECRET: testsecret
+    depends_on:
+      - db
+    networks:
+      - prom-net

@@ -1,3 +1,9 @@
+version: "3.9"
+
+networks:
+  prom-net:
+    external: true
+
 services:
   db:
     image: postgres:15
@@ -12,6 +18,8 @@ services:
       - postgres_data:/var/lib/postgresql/data
       - /usr/share/zoneinfo:/usr/share/zoneinfo:ro      
       - /etc/localtime:/etc/localtime:ro
+    networks:
+      - prom-net
 
   app:
     build: .
@@ -31,8 +39,12 @@ services:
       - /usr/src/app/node_modules 
     depends_on:
       - db
+    networks:
+      - prom-net
+
   prometheus:
     image: prom/prometheus
+    container_name: prometheus
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus_data:/prometheus
@@ -40,6 +52,8 @@ services:
       - "9090:9090"
     depends_on:
       - app
+    networks:
+      - prom-net
 
   grafana:
     image: grafana/grafana
@@ -49,6 +63,8 @@ services:
       - grafana_data:/var/lib/grafana
     depends_on:
       - prometheus
+    networks:
+      - prom-net
 
 volumes:
   postgres_data: {}
