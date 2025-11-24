@@ -22,14 +22,14 @@ export class MetricsService {
     this.purchaseByDealership = new Counter({
       name: 'app_purchases_by_dealership',
       help: 'Cantidad de compras agrupadas por concesionaria',
-      labelNames: ['dealershipId'],
+      labelNames: ['dealershipId', 'dealershipName'],
       registers: [this.registry],
     });
 
     this.purchaseByModel = new Counter({
       name: 'app_purchases_by_model',
       help: 'Cantidad de compras agrupadas por modelo',
-      labelNames: ['modelId'],
+      labelNames: ['modelId', 'modelName'],
       registers: [this.registry],
     });
   }

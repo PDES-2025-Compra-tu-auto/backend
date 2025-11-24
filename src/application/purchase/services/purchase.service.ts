@@ -68,9 +68,13 @@ export class PurchaseService {
 
     this.metricsService.purchaseCount.inc();
 
-    this.metricsService.purchaseByDealership.labels(concesionary.id).inc();
+    this.metricsService.purchaseByDealership
+      .labels(concesionary.id, concesionary.fullname)
+      .inc();
 
-    this.metricsService.purchaseByModel.labels(saleCar.modelCar.id).inc();
+    this.metricsService.purchaseByModel
+      .labels(saleCar.modelCar.id, saleCar.modelCar.model)
+      .inc();
 
     return plainToInstance(PurchaseResponseDto, saved, {
       excludeExtraneousValues: true,
