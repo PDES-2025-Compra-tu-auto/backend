@@ -6,6 +6,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { AuthController } from 'src/infraestructure/auth/controllers/auth.controller';
 import { User } from 'src/domain/user/entities/User';
 import { UserRole } from 'src/domain/user/enums/UserRole';
+import { MetricsService } from 'src/metrics/metrics.service';
 
 describe('AuthController Integration', () => {
   let authController: AuthController;
@@ -31,7 +32,15 @@ describe('AuthController Integration', () => {
         }),
       ],
       controllers: [AuthController],
-      providers: [AuthService],
+      providers: [
+        AuthService,
+        {
+          provide: MetricsService,
+          useValue: {
+            usersRegistered: { inc: jest.fn() },
+          },
+        },
+      ],
     }).compile();
 
     authController = moduleRef.get(AuthController);
