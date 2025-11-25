@@ -77,6 +77,37 @@ jobs:
         if: always()
         run: npm run db:down
 
+  load-tests:
+    runs-on: ubuntu-latest
+    needs: integration-tests
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install k6
+        uses: grafana/setup-k6-action@v1
+
+      - name: Create Docker network
+        run: docker network create prom-net || true
+
+      - name: Start load test environment (db + app)
+        run: npm run db:loadtest:up
+
+      - name: Wait for app to be ready
+        run: |
+          for i in {1..20}; do
+            curl -s http://localhost:4001/api/health && exit 0
+            sleep 3
+          done
+          echo "App not ready" && exit 1
+
+      - name: Run K6 load tests
+        run: npm run k6:run
+
+      - name: Stop load test environment
+        if: always()
+        run: npm run db:loadtest:down
+
   docker-build-push:
     runs-on: ubuntu-latest
     needs: ["build-test", "integration-tests"]
