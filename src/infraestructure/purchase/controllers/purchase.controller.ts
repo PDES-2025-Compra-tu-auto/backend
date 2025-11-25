@@ -31,6 +31,13 @@ export class PurchaseController {
   }
 
   @UseGuards(RolesGuard)
+  @Roles(UserRole.CONCESIONARY)
+  @Get('my-clients')
+  async getMyClients(@ActiveUser() user: UserActiveI) {
+    return this.purchaseService.findClientsByConcesionary(user.sub);
+  }
+
+  @UseGuards(RolesGuard)
   @Roles(UserRole.BUYER)
   @Post(':saleCarId')
   async createPurchase(
