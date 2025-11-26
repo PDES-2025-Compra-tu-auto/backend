@@ -13,7 +13,7 @@ export const options = {
 };
 const host = { 
     url: __ENV.HOST_URL || 'http://localhost',
-    port: __ENV.HOST_PORT || '4000',
+    port: __ENV.HOST_PORT || '4001',
     toString: function() {
         return `${this.url}:${this.port}/api`;
     }

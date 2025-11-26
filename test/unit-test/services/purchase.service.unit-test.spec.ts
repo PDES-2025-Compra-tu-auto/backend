@@ -35,6 +35,9 @@ describe('PurchaseService', () => {
 
     const mockMetricsService = {
       purchaseCount: { inc: jest.fn() },
+      usersRegistered: {
+        labels: jest.fn().mockReturnValue({ inc: jest.fn() }),
+      },
       purchaseByDealership: {
         labels: jest.fn().mockReturnValue({ inc: jest.fn() }),
       },

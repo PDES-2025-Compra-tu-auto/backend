@@ -8,6 +8,8 @@ import {
 } from '@nestjs/common';
 import { UserStatus } from '../../../src/domain/user/enums/UserStatus';
 import { AuthService } from '../../../src/application/auth/services/auth.service';
+import { RegisterDto } from 'src/infraestructure/auth/dtos/register.dto';
+import { MetricsService } from 'src/metrics/metrics.service';
 
 jest.mock('bcrypt', () => ({
   compare: jest.fn(),
@@ -41,23 +43,39 @@ describe('AuthService', () => {
       sign: jest.fn(),
       decode: jest.fn(),
     };
+    const mockMetricsService = {
+      purchaseCount: { inc: jest.fn() },
+      usersRegistered: {
+        inc: jest.fn(),
+        labels: jest.fn().mockReturnValue({ inc: jest.fn() }),
+      },
+      purchaseByDealership: {
+        labels: jest.fn().mockReturnValue({ inc: jest.fn() }),
+      },
+      purchaseByModel: {
+        labels: jest.fn().mockReturnValue({ inc: jest.fn() }),
+      },
+      getMetrics: jest.fn().mockResolvedValue('mock-metrics'),
+    } as unknown as jest.Mocked<MetricsService>;
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AuthService,
         { provide: 'UserRepository', useValue: userRepository },
         { provide: JwtService, useValue: jwtService },
+        {
+          provide: MetricsService,
+          useValue: mockMetricsService as MetricsService,
+        },
       ],
-    })
-      .overrideProvider('UserRepository')
-      .useValue(userRepository)
-      .compile();
+    }).compile();
 
     service = module.get<AuthService>(AuthService);
     (service as any).userRepository = userRepository;
     (service as any).jwtService = jwtService;
+    (service as any).metricsService = mockMetricsService;
 
-    jest.clearAllMocks(); 
+    jest.clearAllMocks();
   });
 
   describe('refreshToken', () => {
@@ -130,7 +148,7 @@ describe('AuthService', () => {
 
     it('should return tokens on valid login', async () => {
       userRepository.findOne.mockResolvedValue(user);
-      (bcrypt.compare as jest.Mock).mockResolvedValueOnce(true);  
+      (bcrypt.compare as jest.Mock).mockResolvedValueOnce(true);
 
       jwtService.sign.mockReturnValueOnce('accessToken');
       jwtService.sign.mockReturnValueOnce('refreshToken');
@@ -161,7 +179,7 @@ describe('AuthService', () => {
     it('should throw BadRequestException if user already exists', async () => {
       userRepository.findOne.mockResolvedValue(userCreated);
 
-      await expect(service.register(dto as any)).rejects.toThrow(
+      await expect(service.register(dto as RegisterDto)).rejects.toThrow(
         BadRequestException,
       );
     });
@@ -173,7 +191,7 @@ describe('AuthService', () => {
       userRepository.save.mockResolvedValue(null);
       userRepository.findOne.mockResolvedValueOnce(userCreated);
 
-      const result = await service.register(dto as any);
+      const result = await service.register(dto as RegisterDto);
 
       expect(userRepository.create).toHaveBeenCalledWith({
         ...dto,

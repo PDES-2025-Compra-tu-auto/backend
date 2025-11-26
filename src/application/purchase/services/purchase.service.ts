@@ -80,4 +80,22 @@ export class PurchaseService {
       excludeExtraneousValues: true,
     });
   }
+
+  async findClientsByConcesionary(concesionaryId: string) {
+    const purchases = await this.purchaseRepository.find({
+      where: { soldBy: { id: concesionaryId } },
+      relations: ['buyer'],
+    });
+
+    const uniqueBuyersMap = new Map();
+
+    for (const purchase of purchases) {
+      const buyer = purchase.buyer;
+      if (buyer && !uniqueBuyersMap.has(buyer.id)) {
+        uniqueBuyersMap.set(buyer.id, buyer);
+      }
+    }
+
+    return Array.from(uniqueBuyersMap.values());
+  }
 }
