@@ -9,9 +9,6 @@ export class Concesionary extends User {
   sales: Purchase[];
 
   @Column()
-  concessionaryName: string;
-
-  @Column()
   concesionaryCuit: string;
 
   @OneToMany(() => SaleCar, (car) => car.concesionary)

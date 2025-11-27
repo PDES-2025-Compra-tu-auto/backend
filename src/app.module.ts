@@ -10,6 +10,7 @@ import { SaleCarModule } from './infraestructure/sale-car/sale-car.module';
 import { UserModule } from './infraestructure/user/user.module';
 import { AdminModule } from './infraestructure/admin/admin.module';
 import { mockData } from './scripts/mock-model-car';
+import { MetricsModule } from './metrics/metrics.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { mockData } from './scripts/mock-model-car';
     AuthModule,
     UserModule,
     AdminModule,
+    MetricsModule,
   ],
   controllers: [],
   providers: [],

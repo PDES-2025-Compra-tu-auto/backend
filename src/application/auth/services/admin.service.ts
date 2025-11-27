@@ -66,4 +66,103 @@ export class AdminService {
       excludeExtraneousValues: true,
     });
   }
+
+  async getTopSoldCars() {
+    const topModels = await this.purchaseRepository
+      .createQueryBuilder('purchase')
+      .leftJoin('purchase.saleCar', 'saleCar')
+      .leftJoin('saleCar.modelCar', 'modelCar')
+      .select([
+        'modelCar.id AS id',
+        'modelCar.brand AS brand',
+        'modelCar.model AS model',
+        'modelCar.imageUrl AS imageUrl',
+        'COUNT(purchase.id) AS "totalSales"',
+      ])
+      .groupBy('modelCar.id')
+      .orderBy('"totalSales"', 'DESC')
+      .limit(5)
+      .getRawMany();
+
+    return topModels.map((item) => ({
+      id: item.id,
+      brand: item.brand,
+      model: item.model,
+      imageUrl: item.imageUrl,
+      totalSales: Number(item.totalSales),
+    }));
+  }
+
+  async getTopBuyers() {
+    const topUsers = await this.purchaseRepository
+      .createQueryBuilder('purchase')
+      .leftJoin('purchase.buyer', 'buyer')
+      .select([
+        'buyer.id AS id',
+        'buyer.fullname AS name',
+        'buyer.email AS email',
+        'COUNT(purchase.id) AS "totalPurchases"',
+      ])
+      .groupBy('buyer.id')
+      .orderBy('"totalPurchases"', 'DESC')
+      .limit(5)
+      .getRawMany();
+
+    return topUsers.map((item) => ({
+      id: item.id,
+      name: item.name,
+      email: item.email,
+      totalPurchases: Number(item.totalPurchases),
+    }));
+  }
+
+  async getTopAgencies() {
+    const topConcesionaries = await this.purchaseRepository
+      .createQueryBuilder('purchase')
+      .leftJoin('purchase.soldBy', 'concesionary')
+      .select([
+        'concesionary.id AS id',
+        'concesionary.fullname AS name',
+        'concesionary.concesionaryCuit AS cuit',
+        'COUNT(purchase.id) AS "totalSales"',
+      ])
+      .groupBy('concesionary.id')
+      .orderBy('"totalSales"', 'DESC')
+      .limit(5)
+      .getRawMany();
+
+    return topConcesionaries.map((item) => ({
+      id: item.id,
+      name: item.name,
+      cuit: item.cuit,
+      totalSales: Number(item.totalSales),
+    }));
+  }
+
+  async getTopRatedCars() {
+    const topRated = await this.reviewRepository
+      .createQueryBuilder('review')
+      .leftJoin('review.modelCar', 'modelCar')
+      .select([
+        'modelCar.id AS id',
+        'modelCar.brand AS brand',
+        'modelCar.model AS model',
+        'modelCar.imageUrl AS imageUrl',
+        'AVG(review.score) AS "averageScore"',
+        'COUNT(review.id) AS "totalReviews"',
+      ])
+      .groupBy('modelCar.id')
+      .orderBy('"averageScore"', 'DESC')
+      .limit(5)
+      .getRawMany();
+
+    return topRated.map((item) => ({
+      id: item.id,
+      brand: item.brand,
+      model: item.model,
+      imageUrl: item.imageUrl,
+      averageScore: Number(item.averageScore),
+      totalReviews: Number(item.totalReviews),
+    }));
+  }
 }
