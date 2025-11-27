@@ -1,3 +1,5 @@
+version: '3.9'
+
 services:
   db:
     image: postgres:15
@@ -11,10 +13,12 @@ services:
       - "${DB_PORT}:5432"
     volumes:
       - /usr/share/zoneinfo:/usr/share/zoneinfo:ro      
-      - /etc/localtime:/etc/localtime:ro      
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - app-network
 
   cta-backend:
-    image: diegomoronha/cta-backend:0.0.0
+    image: diegomoronha/cta-backend:latest
     container_name: cta-backend
     restart: always
     ports:
@@ -29,14 +33,51 @@ services:
       JWT_SECRET: ${JWT_SECRET}
     depends_on:
       - db
+    networks:
+      - app-network
 
   cta-frontend:
-    image: diegomoronha/cta-frontend:0.0.0
+    image: diegomoronha/cta-frontend:latest
     container_name: cta-frontend
     restart: always
     ports:
       - "80:80"
     environment:
-      FE_BACKEND_API: http://localhost:${PORT}
+      FE_BACKEND_API: http://cta-backend:${PORT}
     depends_on:
       - cta-backend
+    networks:
+      - app-network
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+    depends_on:
+      - cta-backend
+    networks:
+      - app-network
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - "3001:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - prometheus
+    networks:
+      - app-network
+
+volumes:
+  prometheus_data:
+  grafana_data:
+
+networks:
+  app-network:
+    driver: bridge

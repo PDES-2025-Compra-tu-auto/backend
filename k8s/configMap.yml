@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cta-backend-config
+  namespace: cta-app
+data:
+  PORT: "4000"
+  DB_HOST: "nozomi.proxy.rlwy.net"
+  DB_PORT: "54253"
+  DB_NAME: "railway"

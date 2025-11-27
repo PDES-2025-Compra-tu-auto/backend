@@ -47,6 +47,6 @@ import { MetricsModule } from './metrics/metrics.module';
 })
 export class AppModule implements OnModuleInit {
   async onModuleInit() {
-    await mockData();
+  //  await mockData();
   }
 }
