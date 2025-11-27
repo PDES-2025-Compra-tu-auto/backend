@@ -64,6 +64,11 @@ const administratorProfile = [
     title: 'Gestioná las concesionarias',
     description: 'Gestioná las concesionarias registradas en la plataforma',
   },
+  {
+    id: 'total-purchases',
+    title: 'Todas las ventas',
+    description: 'Visualizá todas las ventas realizadas en la plataforma',
+  },
 ];
 
 export const DASHBOARD_PROFILE = {
