@@ -3,7 +3,7 @@ import { UserRole } from 'src/domain/user/enums/UserRole';
 
 export class UserResponseDto {
   @Expose()
-  id: number;
+  id: string;
 
   @Expose()
   fullname: string;

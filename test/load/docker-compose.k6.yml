@@ -8,8 +8,8 @@ services:
     image: postgres:15
     restart: always
     environment:
-      POSTGRES_USER: nestdb
-      POSTGRES_PASSWORD: nestpass
+      POSTGRES_USER: nestuser
+      POSTGRES_PASSWORD: nestpassword
       POSTGRES_DB: nestdb
     ports:
       - "5434:5432"
@@ -26,8 +26,8 @@ services:
       PORT: 4001
       DB_HOST: db
       DB_PORT: 5432
-      DB_USER: nestdb
-      DB_PASSWORD: nestpass
+      DB_USER: nestuser
+      DB_PASSWORD: nestpassword
       DB_NAME: nestdb
       JWT_SECRET: testsecret
     depends_on:

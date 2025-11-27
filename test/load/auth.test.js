@@ -5,9 +5,9 @@ import { uuidv4, randomItem } from 'https://jslib.k6.io/k6-utils/1.2.0/index.js'
 export const options = {
     stages: [
         { duration: '30s', target: 10 },   
-        { duration: '45s', target: 50 },     
-        { duration: '1m', target: 120 },
-        { duration: '45s', target: 50 },    
+        { duration: '45s', target: 30 },     
+        { duration: '1m', target: 100 },
+        { duration: '45s', target: 30 },    
         { duration: '30s', target: 0 },   
     ],
 };

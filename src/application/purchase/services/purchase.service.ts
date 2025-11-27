@@ -7,6 +7,8 @@ import { SaleCarService } from 'src/application/sale-car/services/sale-car.servi
 import { plainToInstance } from 'class-transformer';
 import { PurchaseResponseDto } from 'src/infraestructure/purchase/dto/purchase-response.dto';
 import { MetricsService } from 'src/metrics/metrics.service';
+import { Buyer } from 'src/domain/user/entities/Buyer';
+import { UserResponseDto } from 'src/infraestructure/user/dto/user-response.dto';
 
 @Injectable()
 export class PurchaseService {
@@ -87,7 +89,7 @@ export class PurchaseService {
       relations: ['buyer'],
     });
 
-    const uniqueBuyersMap = new Map();
+    const uniqueBuyersMap = new Map<string, Buyer>();
 
     for (const purchase of purchases) {
       const buyer = purchase.buyer;
@@ -96,6 +98,12 @@ export class PurchaseService {
       }
     }
 
-    return Array.from(uniqueBuyersMap.values());
+    return plainToInstance(
+      UserResponseDto,
+      Array.from(uniqueBuyersMap.values()),
+      {
+        excludeExtraneousValues: true,
+      },
+    );
   }
 }
