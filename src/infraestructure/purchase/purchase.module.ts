@@ -5,15 +5,9 @@ import { PurchaseController } from './controllers/purchase.controller';
 import { PurchaseService } from 'src/application/purchase/services/purchase.service';
 import { UserModule } from '../user/user.module';
 import { SaleCarModule } from '../sale-car/sale-car.module';
-import { MetricsModule } from 'src/metrics/metrics.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Purchase]),
-    UserModule,
-    SaleCarModule,
-    MetricsModule,
-  ],
+  imports: [TypeOrmModule.forFeature([Purchase]), UserModule, SaleCarModule],
   controllers: [PurchaseController],
   providers: [PurchaseService],
 })
