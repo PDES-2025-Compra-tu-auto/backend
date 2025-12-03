@@ -44,3 +44,4 @@ import { MetricsModule } from './metrics/metrics.module';
   controllers: [],
   providers: [],
 })
+export class AppModule {}
