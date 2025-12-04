@@ -17,7 +17,7 @@ services:
     networks:
       - app-network
 
-  cta-backend:
+  app:
     image: diegomoronha/cta-backend:latest
     container_name: cta-backend
     restart: always
@@ -43,9 +43,9 @@ services:
     ports:
       - "80:80"
     environment:
-      FE_BACKEND_API: http://cta-backend:${PORT}
+      FE_BACKEND_API: http://localhost:${PORT}/api
     depends_on:
-      - cta-backend
+      - app
     networks:
       - app-network
 
@@ -58,7 +58,7 @@ services:
     ports:
       - "9090:9090"
     depends_on:
-      - cta-backend
+      - app
     networks:
       - app-network
 

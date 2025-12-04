@@ -59,7 +59,13 @@ export class AdminService {
 
   async getAllPurchases() {
     const purchases = await this.purchaseRepository.find({
-      relations: ['buyer', 'saleCar', 'saleCar.concesionary', 'soldBy'],
+      relations: [
+        'buyer',
+        'saleCar',
+        'saleCar.concesionary',
+        'saleCar.modelCar',
+        'soldBy',
+      ],
     });
 
     return plainToInstance(PurchaseResponseDto, purchases, {

@@ -6,7 +6,7 @@ metadata:
   labels:
     app: cta-backend
 spec:
-  replicas: 2
+  replicas: 1
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -24,7 +24,7 @@ spec:
       automountServiceAccountToken: false
       containers:
       - name: cta-backend
-        image: diegomoronha/cta-backend:0.0.0
+        image: diegomoronha/cta-backend:latest
         ports:
         - containerPort: 4000
         envFrom:

@@ -2,6 +2,7 @@ import http from 'k6/http';
 import { check, sleep } from 'k6';
 
 export const options = {
+  insecureSkipTLSVerify: true,
   stages: [
     { duration: '30s', target: 10 },  
     { duration: '1m', target: 20 },   
@@ -44,6 +45,7 @@ function createUserAndLogin(role) {
   };
 
   if (role === "CONCESIONARY") {
+    registerBody.fullname = "Test concesionary";
     registerBody.concesionaryCuit = `20${Math.floor(100000000 + Math.random() * 900000000)}`;
   }
 
