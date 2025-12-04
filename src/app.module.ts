@@ -1,4 +1,4 @@
-import { Module, OnModuleInit } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ModelCarModule } from './infraestructure/model-car/model-car.module';
@@ -9,7 +9,6 @@ import { AuthModule } from './infraestructure/auth/auth.module';
 import { SaleCarModule } from './infraestructure/sale-car/sale-car.module';
 import { UserModule } from './infraestructure/user/user.module';
 import { AdminModule } from './infraestructure/admin/admin.module';
-import { mockData } from './scripts/mock-model-car';
 import { MetricsModule } from './metrics/metrics.module';
 import { LoggerModule } from 'nestjs-pino';
 
@@ -55,8 +54,4 @@ import { LoggerModule } from 'nestjs-pino';
   controllers: [],
   providers: [],
 })
-export class AppModule implements OnModuleInit {
-  async onModuleInit() {
-    await mockData();
-  }
-}
+export class AppModule {}
