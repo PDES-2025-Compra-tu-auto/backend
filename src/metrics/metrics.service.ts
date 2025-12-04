@@ -9,6 +9,7 @@ export class MetricsService {
   public purchaseByDealership: Counter<string>;
   public purchaseByModel: Counter<string>;
   public usersRegistered: Counter<string>;
+  public saleCarPublished: Counter<string>;
 
   constructor() {
     this.registry = new Registry();
@@ -38,6 +39,12 @@ export class MetricsService {
       name: 'app_users_registered_total',
       help: 'Cantidad total de usuarios registrados',
       labelNames: ['role'],
+      registers: [this.registry],
+    });
+
+    this.saleCarPublished = new Counter({
+      name: 'app_salecars_published_total',
+      help: 'Cantidad total de publicaciones creadas',
       registers: [this.registry],
     });
   }

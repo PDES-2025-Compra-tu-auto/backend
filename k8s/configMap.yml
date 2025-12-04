@@ -5,6 +5,6 @@ metadata:
   namespace: cta-app
 data:
   PORT: "4000"
-  DB_HOST: "nozomi.proxy.rlwy.net"
-  DB_PORT: "54253"
-  DB_NAME: "railway"
+  DB_HOST: "host.docker.internal"
+  DB_PORT: "5432"
+  DB_NAME: "nestdb"

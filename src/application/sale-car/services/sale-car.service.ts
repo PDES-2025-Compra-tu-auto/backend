@@ -15,6 +15,7 @@ import { UserService } from 'src/application/user/services/user.service';
 import { plainToInstance } from 'class-transformer';
 import { SaleCarResponseDto } from 'src/infraestructure/sale-car/dto/sale-car-response.dto';
 import { FavoriteCar } from 'src/domain/favoriteCar/entities/FavoriteCar';
+import { MetricsService } from 'src/metrics/metrics.service';
 
 @Injectable()
 export class SaleCarService {
@@ -25,6 +26,7 @@ export class SaleCarService {
     private readonly userService: UserService,
     @InjectRepository(FavoriteCar)
     private readonly favoriteCarRepo: Repository<FavoriteCar>,
+    private readonly metricsService: MetricsService,
   ) {}
 
   async create(
@@ -42,6 +44,7 @@ export class SaleCarService {
     });
 
     const savedSaleCar = await this.saleCarRepo.save(saleCar);
+    this.metricsService.saleCarPublished.inc();
 
     return plainToInstance(SaleCarResponseDto, savedSaleCar, {
       excludeExtraneousValues: true,
