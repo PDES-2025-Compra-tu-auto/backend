@@ -10,6 +10,7 @@ import { SaleCarModule } from './infraestructure/sale-car/sale-car.module';
 import { UserModule } from './infraestructure/user/user.module';
 import { AdminModule } from './infraestructure/admin/admin.module';
 import { MetricsModule } from './metrics/metrics.module';
+import { LoggerModule } from 'nestjs-pino';
 
 @Module({
   imports: [
@@ -40,6 +41,15 @@ import { MetricsModule } from './metrics/metrics.module';
     UserModule,
     AdminModule,
     MetricsModule,
+    LoggerModule.forRoot({
+      pinoHttp: {
+        level: 'info',
+        transport: {
+          target: 'pino-pretty',
+          options: { colorize: true },
+        },
+      },
+    }),
   ],
   controllers: [],
   providers: [],
